@@ -122,48 +122,12 @@ public class ComboSequencer
         switch (inputState)
         {
             case KeySequencer.SequenceState.Success:
-                if (currenLink == null)
-                {
-                    currenLink = chainQueue.Dequeue();
-                    currentCombo = currenLink.combos.Dequeue();
-
-                    //start the anim
-                    anim.CrossFadeInFixedTime(currentCombo.animName, 0.1f, animsLayer);
-                }
-                else
-                {
-                    if (IsCurrentlyPlaying(currentCombo.animName, currentCombo.linkBegin))
-                    {
-                        currenLink = chainQueue.Dequeue();
-                        currentCombo = currenLink.combos.Dequeue();
-
-                        //start the anim
-                        anim.CrossFadeInFixedTime(currentCombo.animName, 0.1f, animsLayer);
-                        Debug.Log("Bridged");
-                    }
-                    else
-                    {
-                        //keys.Undo();
-                    }
-                }
                 break;
             case KeySequencer.SequenceState.Interupted:
-                ResetPartialSequence();
                 break;
             case KeySequencer.SequenceState.Neutrial:
-
                 break;
             case KeySequencer.SequenceState.Completed:
-                
-                //ResetPartialSequence();
-
-                currenLink = chainQueue.Dequeue();
-                currentCombo = currenLink.combos.Dequeue();
-
-                //start the anim
-                anim.CrossFadeInFixedTime(currentCombo.animName, 0.1f, animsLayer);
-
-                ResetPartialSequence();
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
