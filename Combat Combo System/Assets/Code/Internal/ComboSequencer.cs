@@ -138,8 +138,6 @@ public class ComboSequencer
                 anim.CrossFadeInFixedTime(currentCombo.animName, 0.1f, animsLayer);
 
                 currenLink.hasFinished = false;
-
-                Debug.Log(chainQueue.Count);
                 break;
             case KeySequencer.SequenceState.Interupted:
                 ResetPartialSequence();
@@ -150,20 +148,20 @@ public class ComboSequencer
                     currenLink.hasFinished = IsCurrentlyPlaying(currentCombo.animName, currentCombo.linkEnd);
                     if (currenLink.hasFinished)
                     {
-                        Debug.Log("No key stroke was input, resetting");
+                        //no key strokes, reset
                         ResetPartialSequence();
                         break;
                     }
 
-                    if (IsCurrentlyPlaying(currentCombo.animName, currentCombo.linkBegin))
+                    //execute links with long combos automatically
+                    if (IsCurrentlyPlaying(currentCombo.animName, currentCombo.linkBegin) && currenLink.combos.Count > 0)
                     {
-                        ignoreInput = false;
-                    }
-                    else
-                    {
+                        currentCombo = currenLink.combos.Dequeue();
+                        anim.CrossFadeInFixedTime(currentCombo.animName, 0.1f, animsLayer);
                         ignoreInput = true;
-                        Debug.Log("Ignoring input");
                     }
+
+                    ignoreInput = !IsCurrentlyPlaying(currentCombo.animName, currentCombo.linkBegin);
                 }
                 else
                 {
@@ -208,7 +206,7 @@ public class ComboSequencer
 
         if (chainQueue.Count != mainChain.Length)
         {
-            mainChain.All(x => x.Reset());
+            Enumerable.All(mainChain, x => x.Reset());
             chainQueue = new Queue<ChainLink>(mainChain);
         }
 

@@ -408,19 +408,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   combo:
-    type: 0
+    type: 1
     animsLayer: 1
     defaultAnim: empty
     anim: {fileID: 971774330}
     keys:
       timeLimit: 20
-      sequence: 7a0000007800000063000000
+      sequence: 7a00000078000000
     animations:
     - animName: Sword_Attack_R
       linkBegin: 0.4
       linkEnd: 1
     - animName: Sword_Attack_RL
-      linkBegin: 0.55
+      linkBegin: 0.4
       linkEnd: 1
     - animName: Sword_Attack_RLL
       linkBegin: 0.8
