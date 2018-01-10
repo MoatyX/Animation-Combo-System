@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 [Serializable]
 public class ComboSequencer
@@ -19,6 +20,7 @@ public class ComboSequencer
     private ChainLink currenLink;
 
     private bool initiated;
+    private bool ignoreInput;
 
     /// <summary>
     /// Setup the Combo sequencer
@@ -41,15 +43,15 @@ public class ComboSequencer
                 Array.Copy(animations, i, rest, 0, rest.Length);
                 
                 link = new ChainLink(rest);
-                chainQueue.Enqueue(link);
                 mainChain[i] = link;
                 break;
             }
 
             link = new ChainLink(animations[i]);
-            chainQueue.Enqueue(link);
             mainChain[i] = link;
         }
+
+        chainQueue = new Queue<ChainLink>(mainChain);
 
         keys.Setup(type);
 
@@ -99,13 +101,14 @@ public class ComboSequencer
             currenLink.hasFinished = false;
         }
 
+        //move automatically to the next combo in the chain
         if (currentCombo != null && IsCurrentlyPlaying(currentCombo.animName, currentCombo.linkBegin) && currenLink.combos.Count > 0)
         {
             currentCombo = currenLink.combos.Dequeue();
             anim.CrossFadeInFixedTime(currentCombo.animName, 0.1f, animsLayer);
         }
 
-        if (currenLink.combos.Count <= 0 && currentCombo != null &&IsCurrentlyPlaying(currentCombo.animName, currentCombo.linkBegin))
+        if (currenLink.combos.Count <= 0 && currentCombo != null && IsCurrentlyPlaying(currentCombo.animName, currentCombo.linkBegin))
         {
             //Debug.Log("Finished");
             ResetFullSequence();
@@ -117,17 +120,55 @@ public class ComboSequencer
     /// </summary>
     private void PartialSequencer()
     {
-        KeySequencer.SequenceState inputState = keys.Listen();
+        KeySequencer.SequenceState inputState = keys.Listen(ignoreInput);
 
         switch (inputState)
         {
             case KeySequencer.SequenceState.Success:
-                break;
-            case KeySequencer.SequenceState.Interupted:
-                break;
-            case KeySequencer.SequenceState.Neutrial:
+
+                currenLink = chainQueue.Dequeue();
+                currentCombo = currenLink.combos.Dequeue();
+                anim.CrossFadeInFixedTime(currentCombo.animName, 0.1f, animsLayer);
+
+                currenLink.hasFinished = false;
                 break;
             case KeySequencer.SequenceState.Completed:
+                currenLink = chainQueue.Dequeue();
+                currentCombo = currenLink.combos.Dequeue();
+                anim.CrossFadeInFixedTime(currentCombo.animName, 0.1f, animsLayer);
+
+                currenLink.hasFinished = false;
+
+                Debug.Log(chainQueue.Count);
+                break;
+            case KeySequencer.SequenceState.Interupted:
+                ResetPartialSequence();
+                break;
+            case KeySequencer.SequenceState.Neutrial:
+                if (currentCombo != null && currenLink != null)
+                {
+                    currenLink.hasFinished = IsCurrentlyPlaying(currentCombo.animName, currentCombo.linkEnd);
+                    if (currenLink.hasFinished)
+                    {
+                        Debug.Log("No key stroke was input, resetting");
+                        ResetPartialSequence();
+                        break;
+                    }
+
+                    if (IsCurrentlyPlaying(currentCombo.animName, currentCombo.linkBegin))
+                    {
+                        ignoreInput = false;
+                    }
+                    else
+                    {
+                        ignoreInput = true;
+                        Debug.Log("Ignoring input");
+                    }
+                }
+                else
+                {
+                    ignoreInput = false;
+                }
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -144,7 +185,7 @@ public class ComboSequencer
     /// <returns></returns>
     public bool IsCurrentlyPlaying(string stateName, float minDuration = 0f, float maxDuration = 1f)
     {
-        float currentNormalisedTime = anim.GetCurrentAnimatorStateInfo(animsLayer).normalizedTime;
+        float currentNormalisedTime = Mathf.Clamp01(anim.GetCurrentAnimatorStateInfo(animsLayer).normalizedTime);
         bool condition1 = anim.GetCurrentAnimatorStateInfo(animsLayer).IsName(stateName);
         bool condition2 = !condition1 || Utilities.InRange(currentNormalisedTime, minDuration, maxDuration);
 
@@ -153,7 +194,7 @@ public class ComboSequencer
 
     private void ResetFullSequence()
     {
-        chainQueue.Peek().Reset(animations);
+        chainQueue.Peek().Reset();
         currentCombo = null;
         anim.CrossFade(defaultAnim, 0.1f, animsLayer);
     }
@@ -162,10 +203,17 @@ public class ComboSequencer
     {
         currenLink = null;
         currentCombo = null;
+        ignoreInput = false;
+
 
         if (chainQueue.Count != mainChain.Length)
         {
+            mainChain.All(x => x.Reset());
             chainQueue = new Queue<ChainLink>(mainChain);
         }
+
+        keys.Reset();
+
+        anim.CrossFade(defaultAnim, 0.1f, animsLayer);
     }
 }

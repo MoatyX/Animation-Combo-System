@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 /// <summary>
 /// Defines a link in the ComboChain which could have more than 1 actual animation
@@ -9,8 +10,12 @@ public class ChainLink
     public Queue<AnimCombo> combos = new Queue<AnimCombo>();
     public bool hasFinished;
 
+    private List<AnimCombo> mainCombos = new List<AnimCombo>();
+
     public ChainLink(IEnumerable<AnimCombo> combos)
     {
+        mainCombos = combos.ToList();
+
         IEnumerator<AnimCombo> combo = combos.GetEnumerator();
         while (combo.MoveNext())
         {
@@ -23,22 +28,16 @@ public class ChainLink
 
     public ChainLink(AnimCombo combo)
     {
+        mainCombos.Add(combo);
         combos.Enqueue(combo);
         hasFinished = true;
     }
 
-    public void Reset(AnimCombo combo)
+    public bool Reset()
     {
-        combos.Enqueue(combo);
-    }
-
-    public void Reset(AnimCombo[] combos)
-    {
-        for (int i = 0; i < combos.Length; i++)
-        {
-            this.combos.Enqueue(combos[i]);
-        }
-
+        combos = new Queue<AnimCombo>(mainCombos);
         hasFinished = true;
+
+        return true;
     }
 }

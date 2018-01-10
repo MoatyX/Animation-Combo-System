@@ -30,8 +30,13 @@ public class KeySequencer
         this.type = type;
     }
 
-    public SequenceState Listen()
+    public SequenceState Listen(bool ignoreThis = false)
     {
+        if (ignoreThis)
+        {
+            return SequenceState.Neutrial;
+        }
+
         if (timeLimit < Time.time - timer)
         {
             //Debug.Log("We ran out of time");
@@ -88,8 +93,13 @@ public class KeySequencer
         timer = Time.time;
     }
 
+    /// <summary>
+    /// Undo the last key stroke
+    /// </summary>
     public void Undo()
     {
-        queue.Enqueue(sequence[sequence.Length - queue.Count - 2]);
+        if(sequence.Length == queue.Count) return;
+
+        queue.Enqueue(sequence[sequence.Length - 1 - queue.Count]);
     }
 }

@@ -408,12 +408,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   combo:
-    type: 1
+    type: 0
     animsLayer: 1
     defaultAnim: empty
     anim: {fileID: 971774330}
     keys:
-      timeLimit: 2
+      timeLimit: 20
       sequence: 7a0000007800000063000000
     animations:
     - animName: Sword_Attack_R
