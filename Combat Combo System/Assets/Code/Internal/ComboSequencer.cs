@@ -122,22 +122,24 @@ public class ComboSequencer
     {
         KeySequencer.SequenceState inputState = keys.Listen(ignoreInput);
 
+        Action Link = () =>
+        {
+            if(chainQueue.Count <= 0) return;
+
+            currenLink = chainQueue.Dequeue();
+            currentCombo = currenLink.combos.Dequeue();
+            anim.CrossFadeInFixedTime(currentCombo.animName, 0.1f, animsLayer);
+
+            currenLink.hasFinished = false;
+        };
+
         switch (inputState)
         {
             case KeySequencer.SequenceState.Success:
-
-                currenLink = chainQueue.Dequeue();
-                currentCombo = currenLink.combos.Dequeue();
-                anim.CrossFadeInFixedTime(currentCombo.animName, 0.1f, animsLayer);
-
-                currenLink.hasFinished = false;
+                Link();
                 break;
             case KeySequencer.SequenceState.Completed:
-                currenLink = chainQueue.Dequeue();
-                currentCombo = currenLink.combos.Dequeue();
-                anim.CrossFadeInFixedTime(currentCombo.animName, 0.1f, animsLayer);
-
-                currenLink.hasFinished = false;
+                Link();
                 break;
             case KeySequencer.SequenceState.Interupted:
                 ResetPartialSequence();
@@ -174,9 +176,39 @@ public class ComboSequencer
     }
 
     /// <summary>
-    /// is the current state playing == stateName ?
+    /// Reset the combo chain for full sequences
     /// </summary>
-    /// <param name="stateName"></param>
+    private void ResetFullSequence()
+    {
+        chainQueue.Peek().Reset();
+        currentCombo = null;
+        anim.CrossFade(defaultAnim, 0.1f, animsLayer);
+    }
+
+    /// <summary>
+    /// reset the partial chain for partial sequences
+    /// </summary>
+    private void ResetPartialSequence()
+    {
+        currenLink = null;
+        currentCombo = null;
+        ignoreInput = false;
+
+        if (chainQueue.Count != mainChain.Length)
+        {
+            Enumerable.All(mainChain, x => x.Reset());
+            chainQueue = new Queue<ChainLink>(mainChain);
+        }
+
+        keys.Reset();
+
+        anim.CrossFade(defaultAnim, 0.1f, animsLayer);
+    }
+
+    /// <summary>
+    /// Check if the current state playing is our targetState and within time constrains
+    /// </summary>
+    /// <param name="stateName">target state</param>
     /// <param name="layer">Which animator layer</param>
     /// <param name="minDuration">min normalised duration to consider</param>
     /// <param name="maxDuration">max normalised duration to consider</param>
@@ -188,30 +220,5 @@ public class ComboSequencer
         bool condition2 = !condition1 || Utilities.InRange(currentNormalisedTime, minDuration, maxDuration);
 
         return condition1 && condition2;
-    }
-
-    private void ResetFullSequence()
-    {
-        chainQueue.Peek().Reset();
-        currentCombo = null;
-        anim.CrossFade(defaultAnim, 0.1f, animsLayer);
-    }
-
-    private void ResetPartialSequence()
-    {
-        currenLink = null;
-        currentCombo = null;
-        ignoreInput = false;
-
-
-        if (chainQueue.Count != mainChain.Length)
-        {
-            Enumerable.All(mainChain, x => x.Reset());
-            chainQueue = new Queue<ChainLink>(mainChain);
-        }
-
-        keys.Reset();
-
-        anim.CrossFade(defaultAnim, 0.1f, animsLayer);
     }
 }

@@ -19,17 +19,27 @@ public class KeySequencer
     private SequenceType type;
     private float timer;
 
+
+    /// <summary>
+    /// Initialisation
+    /// </summary>
+    /// <param name="type"></param>
     public void Setup(SequenceType type)
     {
-        for (int i = 0; i < sequence.Length; i++)
+        foreach (KeyCode k in sequence)
         {
-            queue.Enqueue(sequence[i]);
+            queue.Enqueue(k);
         }
 
         timer = Time.time;
         this.type = type;
     }
 
+    /// <summary>
+    /// Listen to the user input and process the key sequence
+    /// </summary>
+    /// <param name="ignoreThis">force the sequencer to ignore the input this frame</param>
+    /// <returns>the sequence state</returns>
     public SequenceState Listen(bool ignoreThis = false)
     {
         if (ignoreThis)
@@ -39,16 +49,13 @@ public class KeySequencer
 
         if (timeLimit < Time.time - timer)
         {
-            //Debug.Log("We ran out of time");
-
+            //we ran out of time
             Reset();
             return SequenceState.Interupted;
         }
 
         if (Input.GetKeyDown(queue.Peek()))
         {
-            //Debug.Log("Dequeued " + queue.Peek());
-
             queue.Dequeue();
             timer = Time.time;
 
@@ -62,22 +69,20 @@ public class KeySequencer
         }
         else if (Input.anyKeyDown)
         {
+            //incorrect stroke
             Reset();
-            //Debug.Log("Incorrect stroke");
             return SequenceState.Interupted;
         }
 
-        if (queue.Count <= 0)
-        {
-            Reset();
-            //Debug.Log("Sequence complete");
+        if (queue.Count > 0) return SequenceState.Neutrial;
 
-            return SequenceState.Completed;
-        }
-
-        return SequenceState.Neutrial;
+        Reset();
+        return SequenceState.Completed;
     }
 
+    /// <summary>
+    /// Reset the queue
+    /// </summary>
     public void Reset()
     {
         //save us some performance if the queue didnt move

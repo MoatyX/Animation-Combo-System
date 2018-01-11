@@ -168,15 +168,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400004, guid: 49a0e923d39ec3c4c8bb97699e2f2903, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -0.078047514
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 49a0e923d39ec3c4c8bb97699e2f2903, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0.041197777
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 49a0e923d39ec3c4c8bb97699e2f2903, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 0.6849456
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 49a0e923d39ec3c4c8bb97699e2f2903, type: 2}
       propertyPath: m_LocalRotation.x
@@ -413,8 +413,8 @@ MonoBehaviour:
     defaultAnim: empty
     anim: {fileID: 971774330}
     keys:
-      timeLimit: 20
-      sequence: 7a00000078000000
+      timeLimit: 2
+      sequence: 7800000078000000
     animations:
     - animName: Sword_Attack_R
       linkBegin: 0.4
@@ -540,15 +540,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400004, guid: 7387b4e474950e64bac42ae92c72b148, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.022039413
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 7387b4e474950e64bac42ae92c72b148, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0000010728836
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 7387b4e474950e64bac42ae92c72b148, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -6.5289345
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 7387b4e474950e64bac42ae92c72b148, type: 3}
       propertyPath: m_LocalRotation.x
