@@ -2,4 +2,5 @@
 {
     Full,
     Partial,
+    PartialAppending
 }

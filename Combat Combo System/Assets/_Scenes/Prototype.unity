@@ -409,22 +409,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   combo:
     type: 1
-    animsLayer: 1
+    targetLayer: 1
     defaultAnim: empty
+    transitionDuration: 0.1
     anim: {fileID: 971774330}
     keys:
       timeLimit: 2
-      sequence: 7800000078000000
+      sequence: 780000007800000063000000
     animations:
     - animName: Sword_Attack_R
       linkBegin: 0.4
       linkEnd: 1
+      transitionDuration: 0.1
     - animName: Sword_Attack_RL
       linkBegin: 0.4
       linkEnd: 1
+      transitionDuration: 0.1
     - animName: Sword_Attack_RLL
       linkBegin: 0.8
       linkEnd: 1
+      transitionDuration: 0.1
+  combo2:
+    type: 1
+    targetLayer: 1
+    defaultAnim: empty
+    transitionDuration: 0.1
+    anim: {fileID: 971774330}
+    keys:
+      timeLimit: 2
+      sequence: 78000000780000007a000000
+    animations:
+    - animName: Sword_Attack_R
+      linkBegin: 0.4
+      linkEnd: 1
+      transitionDuration: 0.1
+    - animName: Sword_Attack_RL
+      linkBegin: 0.4
+      linkEnd: 1
+      transitionDuration: 0.1
+    - animName: Sword_Attack_RLLR
+      linkBegin: 0.8
+      linkEnd: 1
+      transitionDuration: 0.1
 --- !u!4 &1095352647 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 4e11ef4f39bc65e44a4b0755ecac6ea1, type: 2}

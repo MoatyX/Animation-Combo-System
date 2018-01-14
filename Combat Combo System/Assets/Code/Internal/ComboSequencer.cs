@@ -8,8 +8,12 @@ public class ComboSequencer
 {
     public SequenceType type;
 
-    [SerializeField] int animsLayer;
+    [Header("Default Properties")]
+    [SerializeField] int targetLayer;
     [SerializeField] string defaultAnim;
+    [SerializeField] private float transitionDuration = 0.1f;
+
+    [Header("Combo Setup")]
     [SerializeField] Animator anim;
     [SerializeField] KeySequencer keys;
     [SerializeField] AnimCombo[] animations;
@@ -27,10 +31,34 @@ public class ComboSequencer
     /// </summary>
     public bool Setup()
     {
+        #region Error checking
+        if (!anim)
+        {
+            Debug.LogError("Animation Component was not assigned");
+            return false;
+        }
+
+        if (animations.Length <= 0)
+        {
+            Debug.LogError("No Animations were setup");
+            return false;
+        }
+
+        for (int i = 0; i < animations.Length; i++)
+        {
+            if (!string.IsNullOrEmpty(animations[i].animName)) continue;
+
+            Debug.LogError("the animation of index " + i + " has an empty name string");
+            return false;
+        }
+        #endregion
+
+
         if (keys.sequence.Length > animations.Length) type = SequenceType.Full;
         int chainLength = type == SequenceType.Full ? 1 : keys.sequence.Length;
 
         mainChain = new ChainLink[chainLength];
+        animations.All(x => x.Setup());
 
         for (int i = 0; i < chainLength; i++)
         {
@@ -52,10 +80,9 @@ public class ComboSequencer
         }
 
         chainQueue = new Queue<ChainLink>(mainChain);
-
         keys.Setup(type);
 
-        return initiated = anim;
+        return initiated = true;
     }
 
     /// <summary>
@@ -78,7 +105,7 @@ public class ComboSequencer
                 PartialSequencer();
                 break;
             default:
-                Debug.Log("Achievement unlocked: you have discovered a bug !");
+                Debug.Log("Achievement unlocked: you have broken the system !");
                 break;
         }
     }
@@ -93,24 +120,24 @@ public class ComboSequencer
 
         if (inputState == KeySequencer.SequenceState.Completed && currenLink.hasFinished)
         {
-            //Debug.Log("Executing combo chain");
+            //start the execution
 
             currentCombo = currenLink.combos.Dequeue();
-            anim.CrossFadeInFixedTime(currentCombo.animName, 0.1f, animsLayer);
+            anim.CrossFadeInFixedTime(currentCombo.animHash, currentCombo.transitionDuration, targetLayer);
 
             currenLink.hasFinished = false;
         }
 
         //move automatically to the next combo in the chain
-        if (currentCombo != null && IsCurrentlyPlaying(currentCombo.animName, currentCombo.linkBegin) && currenLink.combos.Count > 0)
+        if (currentCombo != null && IsCurrentlyPlaying(currentCombo.animHash, currentCombo.linkBegin) && currenLink.combos.Count > 0)
         {
             currentCombo = currenLink.combos.Dequeue();
-            anim.CrossFadeInFixedTime(currentCombo.animName, 0.1f, animsLayer);
+            anim.CrossFadeInFixedTime(currentCombo.animHash, currentCombo.transitionDuration, targetLayer);
         }
 
-        if (currenLink.combos.Count <= 0 && currentCombo != null && IsCurrentlyPlaying(currentCombo.animName, currentCombo.linkBegin))
+        //finish
+        if (currenLink.combos.Count <= 0 && currentCombo != null && IsCurrentlyPlaying(currentCombo.animHash, currentCombo.linkBegin))
         {
-            //Debug.Log("Finished");
             ResetFullSequence();
         }
     }
@@ -128,7 +155,7 @@ public class ComboSequencer
 
             currenLink = chainQueue.Dequeue();
             currentCombo = currenLink.combos.Dequeue();
-            anim.CrossFadeInFixedTime(currentCombo.animName, 0.1f, animsLayer);
+            anim.CrossFadeInFixedTime(currentCombo.animHash, currentCombo.transitionDuration, targetLayer);
 
             currenLink.hasFinished = false;
         };
@@ -147,7 +174,7 @@ public class ComboSequencer
             case KeySequencer.SequenceState.Neutrial:
                 if (currentCombo != null && currenLink != null)
                 {
-                    currenLink.hasFinished = IsCurrentlyPlaying(currentCombo.animName, currentCombo.linkEnd);
+                    currenLink.hasFinished = IsCurrentlyPlaying(currentCombo.animHash, currentCombo.linkEnd);
                     if (currenLink.hasFinished)
                     {
                         //no key strokes, reset
@@ -156,14 +183,14 @@ public class ComboSequencer
                     }
 
                     //execute links with long combos automatically
-                    if (IsCurrentlyPlaying(currentCombo.animName, currentCombo.linkBegin) && currenLink.combos.Count > 0)
+                    if (IsCurrentlyPlaying(currentCombo.animHash, currentCombo.linkBegin) && currenLink.combos.Count > 0)
                     {
                         currentCombo = currenLink.combos.Dequeue();
-                        anim.CrossFadeInFixedTime(currentCombo.animName, 0.1f, animsLayer);
+                        anim.CrossFadeInFixedTime(currentCombo.animHash, currentCombo.transitionDuration, targetLayer);
                         ignoreInput = true;
                     }
 
-                    ignoreInput = !IsCurrentlyPlaying(currentCombo.animName, currentCombo.linkBegin);
+                    ignoreInput = !IsCurrentlyPlaying(currentCombo.animHash, currentCombo.linkBegin);
                 }
                 else
                 {
@@ -182,7 +209,7 @@ public class ComboSequencer
     {
         chainQueue.Peek().Reset();
         currentCombo = null;
-        anim.CrossFade(defaultAnim, 0.1f, animsLayer);
+        anim.CrossFade(defaultAnim, transitionDuration, targetLayer);
     }
 
     /// <summary>
@@ -202,21 +229,20 @@ public class ComboSequencer
 
         keys.Reset();
 
-        anim.CrossFade(defaultAnim, 0.1f, animsLayer);
+        //anim.CrossFade(defaultAnim, transitionDuration, targetLayer);
     }
 
     /// <summary>
     /// Check if the current state playing is our targetState and within time constrains
     /// </summary>
-    /// <param name="stateName">target state</param>
-    /// <param name="layer">Which animator layer</param>
+    /// <param name="stateHash">target state</param>
     /// <param name="minDuration">min normalised duration to consider</param>
     /// <param name="maxDuration">max normalised duration to consider</param>
     /// <returns></returns>
-    public bool IsCurrentlyPlaying(string stateName, float minDuration = 0f, float maxDuration = 1f)
+    public bool IsCurrentlyPlaying(int stateHash, float minDuration = 0f, float maxDuration = 1f)
     {
-        float currentNormalisedTime = Mathf.Clamp01(anim.GetCurrentAnimatorStateInfo(animsLayer).normalizedTime);
-        bool condition1 = anim.GetCurrentAnimatorStateInfo(animsLayer).IsName(stateName);
+        float currentNormalisedTime = Mathf.Clamp01(anim.GetCurrentAnimatorStateInfo(targetLayer).normalizedTime);
+        bool condition1 = anim.GetCurrentAnimatorStateInfo(targetLayer).shortNameHash == stateHash;
         bool condition2 = !condition1 || Utilities.InRange(currentNormalisedTime, minDuration, maxDuration);
 
         return condition1 && condition2;

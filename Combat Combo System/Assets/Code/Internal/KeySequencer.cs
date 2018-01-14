@@ -15,7 +15,7 @@ public class KeySequencer
     public float timeLimit;
     public KeyCode[] sequence;
 
-    public Queue<KeyCode> queue = new Queue<KeyCode>();
+    private Queue<KeyCode> queue = new Queue<KeyCode>();
     private SequenceType type;
     private float timer;
 
