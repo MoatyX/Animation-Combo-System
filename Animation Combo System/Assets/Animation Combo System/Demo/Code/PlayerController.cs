@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
         PlayerMotor();
         UpdateAnimParams();
     }
-
+     
     private void OnAnimatorMove()
     {
         if(!Grounded()) return;
