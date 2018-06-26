@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 8
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -39,7 +39,6 @@ RenderSettings:
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
   m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
-  m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -55,10 +54,11 @@ LightmapSettings:
     m_EnableBakedLightmaps: 1
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
-    serializedVersion: 10
+    serializedVersion: 9
     m_Resolution: 2
     m_BakeResolution: 10
-    m_AtlasSize: 512
+    m_TextureWidth: 1024
+    m_TextureHeight: 1024
     m_AO: 0
     m_AOMaxDistance: 1
     m_CompAOExponent: 1
@@ -386,9 +386,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 2
   m_Convex: 0
-  m_CookingOptions: 14
+  m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &1178479083
@@ -404,7 +404,6 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 76ff537c8e1a84345868e6aeee938ab3, type: 2}
   m_StaticBatchInfo:
@@ -645,7 +644,6 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
@@ -697,7 +695,12 @@ Prefab:
     - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
       propertyPath: ArmedSequencer.combos.Array.size
-      value: 3
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
+        type: 2}
+      propertyPath: UnarmedSequencer.combos.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4997608890982170, guid: 22d0be97c6fa0a14692aa8995116150f, type: 2}
       propertyPath: m_LocalPosition.x
@@ -737,27 +740,26 @@ Prefab:
       value: 
       objectReference: {fileID: 11400000, guid: 424e28c640739664f8a15aa5eaa8a4da,
         type: 2}
+    - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
+        type: 2}
+      propertyPath: UnarmedSequencer.combos.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: d60cb0eeddebb1a40841f333bec2ac9d,
+        type: 2}
+    - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
+        type: 2}
+      propertyPath: ArmedSequencer.combos.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 5d516a8eafa133d49926f303c9cf4fc1,
+        type: 2}
+    - target: {fileID: 114956153697661294, guid: 22d0be97c6fa0a14692aa8995116150f,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 22d0be97c6fa0a14692aa8995116150f, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1752585476 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1143939130889992, guid: 22d0be97c6fa0a14692aa8995116150f,
-    type: 2}
-  m_PrefabInternal: {fileID: 1752585475}
---- !u!114 &1752585477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1752585476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f79be4611bed57c4fab6dcf8526de651, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  anims:
-  - {fileID: 0}
 --- !u!1001 &1943361426
 Prefab:
   m_ObjectHideFlags: 0

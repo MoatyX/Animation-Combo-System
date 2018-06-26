@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AnimName: melee_combo_ver1
   LinkBegin: 0
-  LinkEnd: 0
+  LinkEnd: 1
   TransitionDuration: 0.1
   ScanPoints: []
   Damage: 0

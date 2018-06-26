@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Name: Melee_Attack_Horizontal
   m_EditorClassIdentifier: 
   AnimName: melee_attack_horizontal
-  LinkBegin: 0
-  LinkEnd: 0
+  LinkBegin: 0.7
+  LinkEnd: 1
   TransitionDuration: 0.1
   ScanPoints: []
   Damage: 0

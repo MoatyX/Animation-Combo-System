@@ -60,7 +60,7 @@ namespace Generics.Utilities
             }
             else
             {
-                Debug.Log("The current Animation in the link is not defined");
+                Debug.LogError("The current Anim is null");
             }
         }
 
@@ -70,15 +70,14 @@ namespace Generics.Utilities
         /// <param name="currentAnim"></param>
         /// <param name="targetLayer">the layer which the anim is on</param>
         /// <param name="onlyActivation">true, if we dont want to consider timing</param>
-        /// <param name="isFinishing">true if we only want to include a 'if the state is about to finish and exit' check</param>
         /// <returns></returns>
-        public bool IsCurrentlyActive(AttackAnim currentAnim, int targetLayer, bool onlyActivation = false, bool isFinishing = false)
+        public bool IsCurrentlyActive(AttackAnim currentAnim, int targetLayer, bool onlyActivation = false)
         {
             if (currentAnim == null) return false;
 
             float currentNormalisedTime = Mathf.Clamp01(animator.GetCurrentAnimatorStateInfo(targetLayer).normalizedTime);
-            float start = isFinishing ? currentAnim.LinkEnd : currentAnim.LinkBegin;
-            float end = isFinishing ? 1f : currentAnim.LinkEnd;
+            float start = currentAnim.LinkBegin;
+            float end = currentAnim.LinkEnd;
 
             //trigger a scan point
             for (int i = 0; i < currentAnim.ScanPoints.Length; i++)
@@ -91,10 +90,73 @@ namespace Generics.Utilities
 
             bool condition1 = animator.GetCurrentAnimatorStateInfo(targetLayer).shortNameHash == currentAnim.AnimHash;      //name match
             bool condition2 = Utilities.InRange(currentNormalisedTime, start , end) || onlyActivation;                      //in range
-            bool condition3 = !condition1 || condition2;                                                                    //both must be true to call it a night
-            bool condition4 = !isFinishing || animator.IsInTransition(targetLayer) && condition2;
+            bool condition3 = animator.IsInTransition(targetLayer) && condition2;
 
-            return condition1 && condition2 && condition3 && condition4;
+            return condition1 && condition2 && condition3;
+        }
+
+        /// <summary>
+        /// Check if the attack anim has crossed the LinkBegin time stamp
+        /// </summary>
+        /// <param name="attk"></param>
+        /// <param name="layer"></param>
+        /// <returns></returns>
+        public bool IsBeginningLink(AttackAnim attk, int layer)
+        {
+            if (attk == null) return false;
+
+            var normTime = Mathf.Clamp01(animator.GetCurrentAnimatorStateInfo(layer).normalizedTime);
+            var nameCondition = animator.GetCurrentAnimatorStateInfo(layer).shortNameHash == attk.AnimHash;      //name match
+            var timeCondition = Utilities.InRange(normTime, attk.LinkBegin, 1f);
+
+            return nameCondition && timeCondition;
+        }
+
+        /// <summary>
+        /// check if an anim has crossed the LinkEnd time stamp
+        /// </summary>
+        /// <param name="attk"></param>
+        /// <param name="layer"></param>
+        /// <returns></returns>
+        public bool IsEndingLink(AttackAnim attk, int layer)
+        {
+            if (attk == null) return false;
+
+            var normTime = Mathf.Clamp01(animator.GetCurrentAnimatorStateInfo(layer).normalizedTime);
+            var nameCondition = animator.GetCurrentAnimatorStateInfo(layer).shortNameHash == attk.AnimHash;      //name match
+            var timeCondition = Utilities.InRange(normTime, attk.LinkEnd, 1f);                                   //Range match
+            var existingCondition = animator.IsInTransition(layer);
+
+            return nameCondition && (timeCondition || existingCondition);
+        }
+
+        public bool WithinLink(AttackAnim attk, int layer)
+        {
+            if (attk == null) return false;
+
+            var normTime = Mathf.Clamp01(animator.GetCurrentAnimatorStateInfo(layer).normalizedTime);
+            var nameCondition = animator.GetCurrentAnimatorStateInfo(layer).shortNameHash == attk.AnimHash;      //name match
+            var timeCondition = Utilities.InRange(normTime, attk.LinkBegin, attk.LinkEnd);
+
+            return nameCondition && timeCondition;
+        }
+
+        /// <summary>
+        /// check if a anim has crossed the LinkEnd time stamp AND has been fully played
+        /// </summary>
+        /// <param name="attk"></param>
+        /// <param name="layer"></param>
+        /// <returns></returns>
+        public bool IsExisting(AttackAnim attk, int layer)
+        {
+            if (attk == null) return false;
+
+            var normTime = Mathf.Clamp01(animator.GetCurrentAnimatorStateInfo(layer).normalizedTime);
+            var nameCondition = animator.GetCurrentAnimatorStateInfo(layer).shortNameHash == attk.AnimHash;      //name match
+            var timeCondition = Utilities.InRange(normTime, attk.LinkEnd, 1f);
+            var existingCondition = animator.IsInTransition(layer);
+
+            return nameCondition && timeCondition && existingCondition;
         }
 
         /// <summary>

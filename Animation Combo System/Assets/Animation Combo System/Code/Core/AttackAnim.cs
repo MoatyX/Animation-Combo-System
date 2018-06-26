@@ -14,8 +14,8 @@ namespace Generics.Utilities
         public string AnimName;
 
         [Header("Linking")]
-        [Range(0f, 1f)] public float LinkBegin;
-        [Range(0f, 1f)] public float LinkEnd;
+        [Range(0f, 1f)] public float LinkBegin = 0.2f;
+        [Range(0f, 1f)] public float LinkEnd = 1f;
         public float TransitionDuration = 0.1f;
 
         [Header("Damage")]

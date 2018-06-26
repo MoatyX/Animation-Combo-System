@@ -110,10 +110,10 @@ namespace Generics.Utilities
                     ResetAll();
                     break;
                 case KeySequencer.SequenceState.Neutrial:
-                    if(currenLink == null) break;
+                    if (currenLink == null) break;
 
                     //move automatically to the next combo in the chain
-                    if (brain.IsCurrentlyActive(currentCombo, _layer) && currenLink.Combos.Count > 0)
+                    if (brain.IsBeginningLink(currentCombo, _layer) && currenLink.Combos.Count > 0)
                     {
                         //play next
                         currentCombo = currenLink.Combos.Dequeue();
@@ -122,7 +122,7 @@ namespace Generics.Utilities
                     }
 
                     //finished playing the whole chain
-                    if (currenLink.Combos.Count <= 0 && brain.IsCurrentlyActive(currentCombo, _layer, false, true))
+                    if (currenLink.Combos.Count <= 0 && brain.IsEndingLink(currentCombo, _layer))
                     {
                         ResetAll();
                         Dispatcher.OnComboCompleted(this);
@@ -132,18 +132,11 @@ namespace Generics.Utilities
                     currenLink = chainQueue.Peek();
 
                     //start the execution
-                    if (!currenLink.HasFinished) break;
-                    if (!interruptable) brain.HoldSequencer(this);
-
                     _ignoreInput = true;
                     currentCombo = currenLink.Combos.Dequeue();
                     brain.NextAnimation(currentCombo, _layer);
 
                     Dispatcher.OnAttackTriggered(currentCombo);
-
-                    currenLink.HasFinished = false;
-                    break;
-                default:
                     break;
             }
         }
@@ -175,17 +168,16 @@ namespace Generics.Utilities
                 case KeySequencer.SequenceState.Neutrial:
                     if (currenLink != null)
                     {
-                        currenLink.HasFinished = brain.IsCurrentlyActive(currentCombo, _layer, false, true);
+                        currenLink.HasFinished = brain.IsExisting(currentCombo, _layer);
                         if (currenLink.HasFinished)
                         {
-
-                            //no key strokes, reset
+                            //no key strokes and the anim has finished playing. reset !
                             ResetAll();
                             break;
                         }
 
                         //execute links with long combos automatically
-                        if (brain.IsCurrentlyActive(currentCombo, _layer) && currenLink.Combos.Count > 0)
+                        if (brain.IsEndingLink(currentCombo, _layer) && currenLink.Combos.Count > 0)
                         {
                             currentCombo = currenLink.Combos.Dequeue();
                             brain.NextAnimation(currentCombo, _layer);
@@ -194,7 +186,7 @@ namespace Generics.Utilities
                             Dispatcher.OnAttackTriggered(currentCombo);
                         }
 
-                        _ignoreInput = !brain.IsCurrentlyActive(currentCombo, _layer);
+                        _ignoreInput = !brain.WithinLink(currentCombo, _layer);  //determain timing
                     }
                     else
                     {
@@ -236,15 +228,15 @@ namespace Generics.Utilities
 
                     if (currenLink != null)
                     {
-                        currenLink.HasFinished = brain.IsCurrentlyActive(currentCombo, _layer, false, true);
+                        currenLink.HasFinished = brain.IsExisting(currentCombo, _layer);
                         if (currenLink.HasFinished)
                         {
-                            //no key strokes, reset
+                            //no key strokes and the anim has finished playing. reset !
                             ResetAll();
                             break;
                         }
 
-                        if (brain.IsCurrentlyActive(currentCombo, _layer))
+                        if (brain.IsEndingLink(currentCombo, _layer))
                         {
                             if (actions.Count > 0) //transition
                             {
@@ -269,7 +261,7 @@ namespace Generics.Utilities
         private void Link()
         {
             if (chainQueue.Count <= 0) return;
-            if(!interruptable) brain.HoldSequencer(this); 
+            if(interruptable == false) brain.HoldSequencer(this); 
 
             currenLink = chainQueue.Dequeue();
             currentCombo = currenLink.Combos.Dequeue();

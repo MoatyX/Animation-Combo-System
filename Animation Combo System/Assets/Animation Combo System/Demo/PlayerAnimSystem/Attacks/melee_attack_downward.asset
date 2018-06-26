@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Name: melee_attack_downward
   m_EditorClassIdentifier: 
   AnimName: melee_attack_downward
-  LinkBegin: 0
-  LinkEnd: 0
+  LinkBegin: 0.4
+  LinkEnd: 1
   TransitionDuration: 0.1
   ScanPoints: []
   Damage: 0

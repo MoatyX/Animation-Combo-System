@@ -43,11 +43,11 @@ namespace Generics.Utilities
         /// <summary>
         /// Listen to the user input and process the key sequence
         /// </summary>
-        /// <param name="ignoreThis">force the sequencer to ignore the input this frame</param>
+        /// <param name="ignoreThisPass">force the sequencer to ignore the input this frame</param>
         /// <returns>the sequence state</returns>
-        public SequenceState Listen(bool ignoreThis = false)
+        public SequenceState Listen(bool ignoreThisPass = false)
         {
-            if (ignoreThis)
+            if (ignoreThisPass)
             {
                 return SequenceState.Neutrial;
             }
