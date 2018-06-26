@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Name: melee_kick2
   m_EditorClassIdentifier: 
   AnimName: melee_kick2
-  LinkBegin: 0
-  LinkEnd: 0
+  LinkBegin: 0.7
+  LinkEnd: 1
   TransitionDuration: 0.1
   ScanPoints: []
   Damage: 0

@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Name: ArmedCombo1
   m_EditorClassIdentifier: 
   layerName: Fullbody
-  interruptable: 0
   animations:
   - {fileID: 11400000, guid: 176a61243c53950429042d78d62be49b, type: 2}
   - {fileID: 11400000, guid: 1a8f1c4cdad2e494cb805d0a3bffa557, type: 2}
@@ -21,4 +20,4 @@ MonoBehaviour:
     type: 2
     enableTimeLimit: 1
     timeLimit: 2
-    sequence: 4301000043010000
+    sequence: 430100004301000044010000

@@ -6,6 +6,11 @@ using UnityEngine;
 /// </summary>
 public class SampleEventsListener : MonoBehaviour
 {
+    [Header("Logs")]
+    public bool HitScanningLogs;
+    public bool ComboCompeleteLogs;
+    public bool AttackTriggeredLogs;
+
     [Header("Hit Scanning")]
     public Transform ScanPoint;
     public float RayLength;
@@ -21,6 +26,8 @@ public class SampleEventsListener : MonoBehaviour
     private void OnDisable()
     {
         Dispatcher.HitScanning -= OnHitScanning;
+        Dispatcher.ComboCompleted -= OnComboCompleted;
+        Dispatcher.AttackTriggered -= OnAttackTriggered;
     }
 
     /// <summary>
@@ -33,22 +40,26 @@ public class SampleEventsListener : MonoBehaviour
         //TODO: your custom damage handling logic here
         //TODO: plus any other custom logic and sequences here
 
+        if(HitScanningLogs)
         Debug.Log("Scanning");
 
         Ray ray = new Ray(transform.position, transform.forward);
         bool hit = Physics.Raycast(ray, RayLength, LayerMask, QueryTriggerInteraction.Ignore);
         if(!hit) return;
 
+        if(HitScanningLogs)
         Debug.Log("We have hit something....Apply damage, play audio...etc !");
     }
 
     private void OnComboCompleted(Combo combo)
     {
+        if(ComboCompeleteLogs)
         Debug.Log("the combo was compeleted");
     }
 
     private void OnAttackTriggered(AttackAnim attack)
     {
+        if(AttackTriggeredLogs)
         Debug.Log("the attack: " + attack.AnimName + ", was triggered");
     }
 }

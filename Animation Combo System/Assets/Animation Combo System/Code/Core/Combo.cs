@@ -15,9 +15,6 @@ namespace Generics.Utilities
         [Tooltip("the name of the layer that has the combo anims")]
         public string layerName;
 
-        [Tooltip("TRUE: will block others combos from triggering until this combo is completely finished")]
-        public bool interruptable;
-
         [Tooltip("The combo animation")]
         public AttackAnim[] animations;
 
@@ -121,6 +118,9 @@ namespace Generics.Utilities
                         Dispatcher.OnAttackTriggered(currentCombo);
                     }
 
+                    //be ready to trigger evenets
+                    brain.ScanTimeline(currentCombo, _layer);
+
                     //finished playing the whole chain
                     if (currenLink.Combos.Count <= 0 && brain.IsEndingLink(currentCombo, _layer))
                     {
@@ -132,6 +132,7 @@ namespace Generics.Utilities
                     currenLink = chainQueue.Peek();
 
                     //start the execution
+                    brain.RegisterCurrentCombo(this);
                     _ignoreInput = true;
                     currentCombo = currenLink.Combos.Dequeue();
                     brain.NextAnimation(currentCombo, _layer);
@@ -261,7 +262,7 @@ namespace Generics.Utilities
         private void Link()
         {
             if (chainQueue.Count <= 0) return;
-            if(interruptable == false) brain.HoldSequencer(this); 
+            brain.RegisterCurrentCombo(this); 
 
             currenLink = chainQueue.Dequeue();
             currentCombo = currenLink.Combos.Dequeue();
@@ -300,7 +301,7 @@ namespace Generics.Utilities
             currentCombo = null;
             _ignoreInput = false;
 
-            if (!interruptable) brain.ResumeSequencer();
+            brain.UnRegisterCurrentCombo(this);
             if (chainQueue.Count != mainChain.Length)
             {
                 Enumerable.All(mainChain, x => x.Reset());
@@ -315,7 +316,7 @@ namespace Generics.Utilities
         /// </summary>
         private void ResetFullSequence()
         {
-            if (!interruptable) brain.ResumeSequencer();
+            brain.UnRegisterCurrentCombo(this);
 
             chainQueue.Peek().Reset();
             currentCombo = null;
