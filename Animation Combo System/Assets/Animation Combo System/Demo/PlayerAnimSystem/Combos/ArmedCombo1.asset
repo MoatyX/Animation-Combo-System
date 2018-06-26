@@ -17,7 +17,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1a8f1c4cdad2e494cb805d0a3bffa557, type: 2}
   - {fileID: 11400000, guid: 801efb4115e1ed84fb9f0750aa643328, type: 2}
   inputSequencer:
-    type: 2
+    type: 0
     enableTimeLimit: 1
     timeLimit: 2
     sequence: 430100004301000044010000

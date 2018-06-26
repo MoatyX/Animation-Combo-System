@@ -15,6 +15,7 @@ namespace Generics.Utilities
         public Animator animator;
         private bool _initiated;
 
+        #region Public Properties and API
         public Combo ActiveCombo { get; private set; }
 
         /// <summary>
@@ -58,6 +59,9 @@ namespace Generics.Utilities
             return ActiveCombo != null;
         }
 
+        #endregion
+
+        #region Internal Calls
         /// <summary>
         /// Call the next animation
         /// </summary>
@@ -185,7 +189,7 @@ namespace Generics.Utilities
 
 
         /// <summary>
-        /// 
+        /// Register a current combo
         /// </summary>
         /// <param name="currentCombo"></param>
         protected internal void RegisterCurrentCombo(Combo currentCombo)
@@ -193,11 +197,17 @@ namespace Generics.Utilities
             if (ActiveCombo == null) ActiveCombo = currentCombo;
         }
 
+        /// <summary>
+        /// Unregister the current combo and reset
+        /// </summary>
+        /// <param name="currentCombo"></param>
         protected internal void UnRegisterCurrentCombo(Combo currentCombo)
         {
             if (currentCombo != ActiveCombo) return;
 
             ActiveCombo = null;
         }
+
+        #endregion
     }
 }
