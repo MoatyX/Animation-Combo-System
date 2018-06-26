@@ -2182,7 +2182,6 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 499bda81d7e453a46a78a7283fc5c85c, type: 2}
   m_StaticBatchInfo:
@@ -2217,7 +2216,6 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
@@ -2285,7 +2283,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &114687389133334064
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2298,14 +2295,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ArmedSequencer:
-    combos:
+    Combos:
     - {fileID: 11400000, guid: 75cfda8e70a40fc48bd91b71e3231d05, type: 2}
-    - {fileID: 11400000, guid: 5d516a8eafa133d49926f303c9cf4fc1, type: 2}
     animator: {fileID: 95894263811249378}
   UnarmedSequencer:
-    combos:
-    - {fileID: 11400000, guid: d60cb0eeddebb1a40841f333bec2ac9d, type: 2}
+    Combos: []
     animator: {fileID: 95894263811249378}
+  IsExecutingCombo: 0
+  ActiveCombo: {fileID: 0}
 --- !u!114 &114956153697661294
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2317,6 +2314,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd8a4dfaba65b0a49a4e0145a8dc73b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HitScanningLogs: 0
+  ComboCompeleteLogs: 0
+  AttackTriggeredLogs: 0
   ScanPoint: {fileID: 4718274923748472}
   RayLength: 1
   LayerMask:
@@ -2365,7 +2365,6 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 4867322cf20d67b4793834ccb7537591, type: 2}
   m_StaticBatchInfo:
@@ -2463,7 +2462,6 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 4867322cf20d67b4793834ccb7537591, type: 2}
   m_StaticBatchInfo:
@@ -2529,7 +2527,6 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: bb058fbc18c6ae64e9427db3f8279f16, type: 2}
   m_StaticBatchInfo:

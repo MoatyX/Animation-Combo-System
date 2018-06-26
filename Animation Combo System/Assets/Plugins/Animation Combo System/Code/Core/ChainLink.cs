@@ -49,6 +49,10 @@ namespace Generics.Utilities
         public bool Reset()
         {
             Combos = new Queue<AttackAnim>(_mainCombos);
+            for (int i = 0; i < Combos.Count; i++)
+            {
+                _mainCombos[i].Reset();
+            }
             HasFinished = true;
 
             return true;

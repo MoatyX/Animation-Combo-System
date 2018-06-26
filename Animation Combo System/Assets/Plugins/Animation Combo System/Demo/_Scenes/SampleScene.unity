@@ -694,18 +694,13 @@ Prefab:
     m_Modifications:
     - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
-      propertyPath: ArmedSequencer.combos.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
-        type: 2}
       propertyPath: ArmedSequencer.Combos.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
-      propertyPath: UnarmedSequencer.combos.Array.size
-      value: 0
+      propertyPath: UnarmedSequencer.Combos.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4997608890982170, guid: 22d0be97c6fa0a14692aa8995116150f, type: 2}
       propertyPath: m_LocalPosition.x
@@ -741,44 +736,31 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
-      propertyPath: ArmedSequencer.combos.Array.data[2]
-      value: 
-      objectReference: {fileID: 11400000, guid: 424e28c640739664f8a15aa5eaa8a4da,
-        type: 2}
-    - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
-        type: 2}
-      propertyPath: UnarmedSequencer.combos.Array.data[0]
+      propertyPath: UnarmedSequencer.Combos.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: d60cb0eeddebb1a40841f333bec2ac9d,
         type: 2}
     - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
-      propertyPath: ArmedSequencer.combos.Array.data[1]
+      propertyPath: ArmedSequencer.Combos.Array.data[1]
       value: 
-      objectReference: {fileID: 11400000, guid: 5d516a8eafa133d49926f303c9cf4fc1,
+      objectReference: {fileID: 11400000, guid: 875b887b60503884da5aedb4f281e7d5,
         type: 2}
     - target: {fileID: 114956153697661294, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
-      propertyPath: m_Enabled
+      propertyPath: HitScanningLogs
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114956153697661294, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
-      propertyPath: HitScanningLogs
-      value: 0
+      propertyPath: ComboCompeleteLogs
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
+    - target: {fileID: 114956153697661294, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
-      propertyPath: ArmedSequencer.Combos.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: 75cfda8e70a40fc48bd91b71e3231d05,
-        type: 2}
-    - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
-        type: 2}
-      propertyPath: ArmedSequencer.Combos.Array.data[1]
-      value: 
-      objectReference: {fileID: 11400000, guid: 5a403b86048c4c4488773b463744fb15,
-        type: 2}
+      propertyPath: AttackTriggeredLogs
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 22d0be97c6fa0a14692aa8995116150f, type: 2}
   m_IsPrefabParent: 0

@@ -69,8 +69,10 @@ namespace Generics.Utilities
         {
             if (currentAnim != null)
             {
-                if (!IsCurrentlyActive(currentAnim, targetLayer, true))
+                if (IsCurrentlyActive(currentAnim, targetLayer) == false)
+                {
                     animator.CrossFadeInFixedTime(currentAnim.AnimName, currentAnim.TransitionDuration, targetLayer);
+                }
             }
             else
             {
@@ -85,21 +87,13 @@ namespace Generics.Utilities
         /// <param name="targetLayer">the layer which the anim is on</param>
         /// <param name="onlyActivation">true, if we dont want to consider timing</param>
         /// <returns></returns>
-        protected internal bool IsCurrentlyActive(AttackAnim currentAnim, int targetLayer, bool onlyActivation = false)
+        protected internal bool IsCurrentlyActive(AttackAnim currentAnim, int targetLayer)
         {
             if (currentAnim == null) return false;
 
-            float currentNormalisedTime =
-                Mathf.Clamp01(animator.GetCurrentAnimatorStateInfo(targetLayer).normalizedTime);
-            float start = currentAnim.LinkBegin;
-            float end = currentAnim.LinkEnd;
+            var nameCond = animator.GetCurrentAnimatorStateInfo(targetLayer).shortNameHash == currentAnim.AnimHash;
 
-            bool condition1 =
-                animator.GetCurrentAnimatorStateInfo(targetLayer).shortNameHash == currentAnim.AnimHash; //name match
-            bool condition2 = Utilities.InRange(currentNormalisedTime, start, end) || onlyActivation; //in range
-            bool condition3 = animator.IsInTransition(targetLayer) && condition2;
-
-            return condition1 && condition2 && condition3;
+            return nameCond && currentAnim.HasStarted;
         }
 
         /// <summary>
@@ -135,7 +129,7 @@ namespace Generics.Utilities
 
             var normTime = Mathf.Clamp01(animator.GetCurrentAnimatorStateInfo(layer).normalizedTime);
             var nameCondition = animator.GetCurrentAnimatorStateInfo(layer).shortNameHash == attk.AnimHash; //name match
-            var timeCondition = Utilities.InRange(normTime, attk.LinkBegin, 1f);
+            var timeCondition = Utilities.InRange(normTime, attk.LinkBegin, 1f + Time.deltaTime);
 
             return nameCondition && timeCondition;
         }
@@ -152,7 +146,7 @@ namespace Generics.Utilities
 
             var normTime = Mathf.Clamp01(animator.GetCurrentAnimatorStateInfo(layer).normalizedTime);
             var nameCondition = animator.GetCurrentAnimatorStateInfo(layer).shortNameHash == attk.AnimHash; //name match
-            var timeCondition = Utilities.InRange(normTime, attk.LinkEnd, 1f); //Range match
+            var timeCondition = Utilities.InRange(normTime, attk.LinkEnd - Time.deltaTime, 1f); //Range match
             var existingCondition = animator.IsInTransition(layer);
 
             return nameCondition && (timeCondition || existingCondition);
@@ -181,7 +175,7 @@ namespace Generics.Utilities
 
             var normTime = Mathf.Clamp01(animator.GetCurrentAnimatorStateInfo(layer).normalizedTime);
             var nameCondition = animator.GetCurrentAnimatorStateInfo(layer).shortNameHash == attk.AnimHash; //name match
-            var timeCondition = Utilities.InRange(normTime, attk.LinkEnd, 1f);
+            var timeCondition = Utilities.InRange(normTime, attk.LinkEnd - Time.deltaTime, 1f);
             var existingCondition = animator.IsInTransition(layer);
 
             return nameCondition && timeCondition && existingCondition;

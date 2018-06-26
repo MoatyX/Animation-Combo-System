@@ -304,7 +304,11 @@ namespace Generics.Utilities
             brain.UnRegisterCurrentCombo(this);
             if (chainQueue.Count != mainChain.Length)
             {
-                Enumerable.All(mainChain, x => x.Reset());
+                //Enumerable.All(mainChain, x => x.Reset());
+                for (int i = 0; i < mainChain.Length; i++)
+                {
+                    mainChain[i].Reset();
+                }
                 chainQueue = new Queue<ChainLink>(mainChain);
             }
 

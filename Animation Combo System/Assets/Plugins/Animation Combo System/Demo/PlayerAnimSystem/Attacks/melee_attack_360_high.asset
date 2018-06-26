@@ -9,10 +9,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b43e5e14602dd2349a97d17e9a20e246, type: 3}
-  m_Name: melee_kick2
+  m_Name: melee_attack_360_high
   m_EditorClassIdentifier: 
-  AnimName: melee_kick2
-  LinkBegin: 0.7
+  AnimName: melee_attack_360_high
+  LinkBegin: 0.53
   LinkEnd: 1
   TransitionDuration: 0.1
   ScanPoints: []
