@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Name: melee_attack_360_low
   m_EditorClassIdentifier: 
   AnimName: melee_attack_360_low
-  LinkBegin: 0.5
+  LinkBegin: 0.8
   LinkEnd: 1
   TransitionDuration: 0.1
-  ScanPoints: []
-  Damage: 0
+  DamageEvents: []
+  GenericEvents: []

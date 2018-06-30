@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: melee_attack_360_high
   m_EditorClassIdentifier: 
   AnimName: melee_attack_360_high
-  LinkBegin: 0.53
+  LinkBegin: 0.605
   LinkEnd: 1
   TransitionDuration: 0.1
   DamageEvents: []
