@@ -15,5 +15,5 @@ MonoBehaviour:
   LinkBegin: 0.53
   LinkEnd: 1
   TransitionDuration: 0.1
-  ScanPoints: []
-  Damage: 0
+  DamageEvents: []
+  GenericEvents: []

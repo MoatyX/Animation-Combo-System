@@ -9,14 +9,20 @@ namespace Generics.Utilities
     {
         //Note: system is still under-construction
 
-        public delegate void HitScanNotification(AttackAnim attack);
+        public delegate void HitScanHandler(AttackAnim attack, uint scanIndex, float damage);
+        public delegate void GenericEventHandler(AttackAnim attack, uint index, string key);
         public delegate void AttackTriggeredHandler(AttackAnim attack);
         public delegate void ComboCompletedHandler(Combo combo);
 
         /// <summary>
         /// an event sent at a specific timing for functions to handle the logic/to extend the hit scanning
         /// </summary>
-        public static event HitScanNotification HitScanning;
+        public static event HitScanHandler HitScanning;
+
+        /// <summary>
+        /// an event triggered at a specified timing for functions that want to implement a custom logic
+        /// </summary>
+        public static event GenericEventHandler GenericEvent;
 
         /// <summary>
         /// an event triggered when an attack is triggered
@@ -30,22 +36,28 @@ namespace Generics.Utilities
 
 
 
-        public static void OnHitScanning(AttackAnim attack)
+        internal static void OnHitScanning(AttackAnim attack, uint scanIndex, float damage)
         {
             var handler = HitScanning;
-            if (handler != null) handler(attack);
+            if (handler != null) handler(attack, scanIndex, damage);
         }
 
-        public static void OnAttackTriggered(AttackAnim attack)
+        internal static void OnAttackTriggered(AttackAnim attack)
         {
             var handler = AttackTriggered;
             if (handler != null) handler(attack);
         }
 
-        public static void OnComboCompleted(Combo combo)
+        internal static void OnComboCompleted(Combo combo)
         {
             var handler = ComboCompleted;
             if (handler != null) handler(combo);
+        }
+
+        internal static void OnGenericEvent(AttackAnim attack, uint index, string key)
+        {
+            var handler = GenericEvent;
+            if (handler != null) handler(attack, index, key);
         }
     }
 }

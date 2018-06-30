@@ -7,8 +7,8 @@ namespace UnityStandardAssets.Cameras
     {
         public enum UpdateType // The available methods of updating are:
         {
-            FixedUpdate, // Update in FixedUpdate (for tracking rigidbodies).
-            LateUpdate, // Update in LateUpdate. (for tracking objects that are moved in Update)
+            FixedUpdate, // TriggerEvents in FixedUpdate (for tracking rigidbodies).
+            LateUpdate, // TriggerEvents in LateUpdate. (for tracking objects that are moved in TriggerEvents)
             ManualUpdate, // user must call to update camera
         }
 

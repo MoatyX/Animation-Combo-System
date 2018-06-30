@@ -29,7 +29,7 @@ namespace Generics.Utilities
         }
 
         /// <summary>
-        /// Update all the combos
+        /// TriggerEvents all the combos
         /// </summary>
         public void Update()
         {
@@ -107,14 +107,8 @@ namespace Generics.Utilities
 
             if (attk == null) return;
 
-            float normTime = Mathf.Clamp01(animator.GetCurrentAnimatorStateInfo(layer).normalizedTime);
-            for (int i = 0; i < attk.ScanPoints.Length; i++)
-            {
-                if (Utilities.InRange(normTime, attk.ScanPoints[i], attk.ScanPoints[i] + Time.deltaTime))
-                {
-                    Dispatcher.OnHitScanning(attk);
-                }
-            }
+            var normTime = Mathf.Clamp01(animator.GetCurrentAnimatorStateInfo(layer).normalizedTime);
+            attk.TriggerEvents(normTime);
         }
 
         /// <summary>

@@ -749,17 +749,17 @@ Prefab:
     - target: {fileID: 114956153697661294, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
       propertyPath: HitScanningLogs
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114956153697661294, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
       propertyPath: ComboCompeleteLogs
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114956153697661294, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
       propertyPath: AttackTriggeredLogs
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 22d0be97c6fa0a14692aa8995116150f, type: 2}
