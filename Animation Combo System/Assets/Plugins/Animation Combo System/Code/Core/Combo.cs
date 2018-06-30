@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -36,7 +35,7 @@ namespace Generics.Utilities
         /// Setup and prepare
         /// </summary>
         /// <returns></returns>
-        public bool Initialise(ComboSequencer brain)
+        protected internal bool Initialise(ComboSequencer brain)
         {
             if (inputSequencer.sequence.Length > animations.Length) inputSequencer.type = SequenceType.Full;
             int chainLength = inputSequencer.type == SequenceType.Full ? 1 : inputSequencer.sequence.Length;
@@ -45,7 +44,7 @@ namespace Generics.Utilities
             _ignoreInput = false;
             this.brain = brain;
 
-            _layer = brain.animator.GetLayerIndex(layerName);
+            _layer = brain.Animator.GetLayerIndex(layerName);
 
             for (int i = 0; i < chainLength; i++)
             {
@@ -75,7 +74,7 @@ namespace Generics.Utilities
         /// <summary>
         /// process
         /// </summary>
-        public void Update()
+        protected internal void Update()
         {
             switch (inputSequencer.type)
             {
