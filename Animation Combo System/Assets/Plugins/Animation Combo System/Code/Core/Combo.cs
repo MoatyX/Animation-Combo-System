@@ -41,14 +41,24 @@ namespace Generics.Utilities
                 Debug.LogWarning(string.Format("No Animations were set in the Combo: {0}", this.name));
                 return false;
             }
+
             if (InputSequencer.Sequence.Length == 0)
             {
                 Debug.LogWarning(string.Format("No InputSequence was set in the Combo: {0}", this.name));
                 return false;
             }
+
             if (string.IsNullOrEmpty(LayerName))
             {
                 Debug.LogWarning(string.Format("No LayerName set in the Combo: {0}", this.name));
+                return false;
+            }
+
+            _layer = brain.Animator.GetLayerIndex(LayerName);
+
+            if (_layer == -1)
+            {
+                Debug.LogWarning(string.Format("Invalid LayerName in the Combo: {0}", this.name));
                 return false;
             }
 
@@ -58,8 +68,6 @@ namespace Generics.Utilities
             _mainChain = new ChainLink[chainLength];
             _ignoreInput = false;
             this._brain = brain;
-
-            _layer = brain.Animator.GetLayerIndex(LayerName);
 
             for (int i = 0; i < chainLength; i++)
             {
@@ -219,63 +227,6 @@ namespace Generics.Utilities
         }
 
         /// <summary>
-        /// Buffered Sequencer
-        /// </summary>
-        private void AppendSequencer()
-        {
-            KeySequencer.SequenceState inputState = InputSequencer.BufferedListening();
-
-            //put all Actions corresponding to the SequenceState in the Buffer and execute them when the Key Sequencer is in a neutral state
-            switch (inputState)
-            {
-                case KeySequencer.SequenceState.Success:
-                    _actions.Enqueue(Link);
-                    break;
-                case KeySequencer.SequenceState.Completed:
-                    _actions.Enqueue(Link);
-                    _actions.Enqueue(delegate { Dispatcher.OnComboCompleted(this); });
-                    break;
-                case KeySequencer.SequenceState.Interupted:
-                    _actions.Enqueue(ResetAll);
-                    break;
-                case KeySequencer.SequenceState.Neutrial:
-
-                    if (_currenLink == null && _actions.Count > 0) //start
-                    {
-                        _actions.Dequeue().Invoke();
-                    }
-
-                    if (_currenLink != null)
-                    {
-                        _currenLink.HasFinished = _brain.IsExisting(_currentAttk, _layer);
-                        if (_currenLink.HasFinished)
-                        {
-                            //no key strokes and the anim has finished playing. reset !
-                            ResetAll();
-                            break;
-                        }
-
-                        if (_brain.IsEndingLink(_currentAttk, _layer))
-                        {
-                            if (_actions.Count > 0) //transition
-                            {
-                                _actions.Dequeue().Invoke();
-                            }
-                            else if (_currenLink.Combos.Count > 0) //finish off
-                            {
-                                _currentAttk = _currenLink.Combos.Dequeue();
-                                _brain.NextAnimation(_currentAttk, _layer);
-
-                                Dispatcher.OnAttackTriggered(_currentAttk);
-                            }
-                        }
-                    }
-
-                    break;
-            }
-        }
-
-        /// <summary>
         /// Buffered Seuquencer
         /// </summary>
         private void ScheduledSequencer()
@@ -284,16 +235,57 @@ namespace Generics.Utilities
             switch (inputState)
             {
                 case KeySequencer.SequenceState.Success:
-                    Debug.Log("Succ");
+                    _actions.Enqueue(Link);
                     break;
                 case KeySequencer.SequenceState.Interupted:
-                    Debug.Log("Interr");
+                    _actions.Enqueue(ResetAll);
                     break;
                 case KeySequencer.SequenceState.Neutrial:
-                    Debug.Log("Neut");
+
+                    /* Duties:
+                     * activate actions (no matter which) at the LinkEnd of Attacks (if non playing, activate directly)
+                     * if anim finishes and No input -> reset
+                     */
+
+                    if (_currenLink == null && _actions.Count > 0) //start
+                    {
+                        _actions.Dequeue().Invoke();
+                    }
+
+                    if (_currenLink != null)
+                    {
+                        if (_brain.IsEndingLink(_currentAttk, _layer))
+                        {
+                            if (_actions.Count > 0) //transition
+                            {
+                                _actions.Dequeue().Invoke();
+                            }
+                            else if (_currenLink.Combos.Count > 0) //finish off
+                            {
+                                _currentAttk.Reset();
+                                _currentAttk = _currenLink.Combos.Dequeue();
+                                _brain.NextAnimation(_currentAttk, _layer);
+
+                                Dispatcher.OnAttackTriggered(_currentAttk);
+                            }
+                        }
+
+                        _currenLink.HasFinished = _brain.IsExisting(_currentAttk, _layer);
+                        if (_currenLink.HasFinished)
+                        {
+                            if (_currenLink.Combos.Count == 0 && _chainQueue.Count == 0)
+                            {
+                                Dispatcher.OnComboCompleted(this);
+                            }
+
+                            //no key strokes and the anim has finished playing. reset !
+                            ResetAll();
+                        }
+                    }
+
                     break;
                 case KeySequencer.SequenceState.Completed:
-                    Debug.Log("Comp");
+                    _actions.Enqueue(Link);
                     break;
             }
         }
@@ -340,6 +332,7 @@ namespace Generics.Utilities
         /// </summary>
         private void ResetPartialSequence()
         {
+            Debug.Log("Reseted");
             _currenLink = null;
             _currentAttk = null;
             _ignoreInput = false;

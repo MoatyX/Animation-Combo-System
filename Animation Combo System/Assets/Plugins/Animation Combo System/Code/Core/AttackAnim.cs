@@ -109,6 +109,11 @@ namespace Generics.Utilities
 
         private void OnEnable()
         {
+            if (string.IsNullOrEmpty(AnimName) && Application.isPlaying)
+            {
+                Debug.LogWarning(string.Format("No Animation Name was set in the Attack: {0}", name));
+            }
+
             AnimHash = Animator.StringToHash(AnimName);
             TransitionDuration = Mathf.Abs(TransitionDuration);
             Reset();
