@@ -11,13 +11,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ae57ae7d73213649a4c8f938dfb792f, type: 3}
   m_Name: ArmedCombo1
   m_EditorClassIdentifier: 
-  layerName: Fullbody
-  animations:
+  LayerName: Fullname
+  Animations:
   - {fileID: 11400000, guid: 908ee407a4723b94492cfc11a273544b, type: 2}
   - {fileID: 11400000, guid: 885ac9d4bf9dafb4982b70b6d55c820e, type: 2}
   - {fileID: 11400000, guid: b9ed8324a4a0450448180df6611828aa, type: 2}
-  inputSequencer:
-    type: 1
-    enableTimeLimit: 0
-    timeLimit: 2
-    sequence: 430100004301000043010000
+  InputSequencer:
+    Type: 2
+    EnableTimeLimit: 1
+    TimeLimit: 2
+    Sequence: 430100004301000043010000

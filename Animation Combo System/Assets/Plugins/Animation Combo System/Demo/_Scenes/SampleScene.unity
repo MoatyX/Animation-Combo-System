@@ -695,7 +695,7 @@ Prefab:
     - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
       propertyPath: ArmedSequencer.Combos.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}

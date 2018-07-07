@@ -12,20 +12,20 @@ namespace Generics.Utilities
     public class Combo : ScriptableObject
     {
         [Tooltip("the name of the layer that has the combo anims")]
-        public string layerName;
+        public string LayerName;
 
-        [Tooltip("The combo animation")] public AttackAnim[] animations;
+        [Tooltip("The combo animation")] public AttackAnim[] Animations;
 
         [Tooltip("Setup how the Input triggers the Combo")]
-        public KeySequencer inputSequencer;
+        public KeySequencer InputSequencer;
 
-        private ChainLink currenLink;
-        private AttackAnim currentAttk;
+        private ChainLink _currenLink;
+        private AttackAnim _currentAttk;
 
-        private ComboSequencer brain;
-        private ChainLink[] mainChain;
-        private Queue<ChainLink> chainQueue;
-        private Queue<Action> actions;
+        private ComboSequencer _brain;
+        private ChainLink[] _mainChain;
+        private Queue<ChainLink> _chainQueue;
+        private Queue<Action> _actions;
 
         private bool _ignoreInput;
         private int _layer;
@@ -36,37 +36,53 @@ namespace Generics.Utilities
         /// <returns></returns>
         protected internal bool Initialise(ComboSequencer brain)
         {
-            if (inputSequencer.sequence.Length > animations.Length) inputSequencer.type = SequenceType.Full;
-            int chainLength = inputSequencer.type == SequenceType.Full ? 1 : inputSequencer.sequence.Length;
+            if (Animations.Length == 0)
+            {
+                Debug.LogWarning(string.Format("No Animations were set in the Combo: {0}", this.name));
+                return false;
+            }
+            if (InputSequencer.Sequence.Length == 0)
+            {
+                Debug.LogWarning(string.Format("No InputSequence was set in the Combo: {0}", this.name));
+                return false;
+            }
+            if (string.IsNullOrEmpty(LayerName))
+            {
+                Debug.LogWarning(string.Format("No LayerName set in the Combo: {0}", this.name));
+                return false;
+            }
 
-            mainChain = new ChainLink[chainLength];
+            if (InputSequencer.Sequence.Length > Animations.Length) InputSequencer.Type = SequenceType.Full;
+            int chainLength = InputSequencer.Type == SequenceType.Full ? 1 : InputSequencer.Sequence.Length;
+
+            _mainChain = new ChainLink[chainLength];
             _ignoreInput = false;
-            this.brain = brain;
+            this._brain = brain;
 
-            _layer = brain.Animator.GetLayerIndex(layerName);
+            _layer = brain.Animator.GetLayerIndex(LayerName);
 
             for (int i = 0; i < chainLength; i++)
             {
                 ChainLink link;
 
                 //put the rest of the anims inside the last chain link
-                if (i + 1 == chainLength && animations.Length >= 1)
+                if (i + 1 == chainLength && Animations.Length >= 1)
                 {
-                    AttackAnim[] rest = new AttackAnim[animations.Length - i];
-                    Array.Copy(animations, i, rest, 0, rest.Length);
+                    AttackAnim[] rest = new AttackAnim[Animations.Length - i];
+                    Array.Copy(Animations, i, rest, 0, rest.Length);
 
                     link = new ChainLink(rest);
-                    mainChain[i] = link;
+                    _mainChain[i] = link;
                     break;
                 }
 
-                link = new ChainLink(animations[i]);
-                mainChain[i] = link;
+                link = new ChainLink(Animations[i]);
+                _mainChain[i] = link;
             }
 
-            chainQueue = new Queue<ChainLink>(mainChain);
-            actions = new Queue<Action>();
-            inputSequencer.Setup();
+            _chainQueue = new Queue<ChainLink>(_mainChain);
+            _actions = new Queue<Action>();
+            InputSequencer.Setup();
             return true;
         }
 
@@ -75,7 +91,7 @@ namespace Generics.Utilities
         /// </summary>
         protected internal void Update()
         {
-            switch (inputSequencer.type)
+            switch (InputSequencer.Type)
             {
                 case SequenceType.Full:
                     FullSequencer();
@@ -84,7 +100,7 @@ namespace Generics.Utilities
                     TimedPartialSequencer();
                     break;
                 case SequenceType.PartialAppending:
-                    AppendSequencer();
+                    ScheduledSequencer();
                     break;
                 default:
                     Debug.Log("Achievement unlocked: you have broken the system !");
@@ -97,7 +113,7 @@ namespace Generics.Utilities
         /// </summary>
         private void FullSequencer()
         {
-            KeySequencer.SequenceState inputState = inputSequencer.Listen(_ignoreInput);
+            KeySequencer.SequenceState inputState = InputSequencer.Listen(_ignoreInput);
 
             switch (inputState)
             {
@@ -105,23 +121,23 @@ namespace Generics.Utilities
                     ResetAll();
                     break;
                 case KeySequencer.SequenceState.Neutrial:
-                    if (currenLink == null) break;
+                    if (_currenLink == null) break;
 
                     //move automatically to the next combo in the chain
-                    if (brain.IsBeginningLink(currentAttk, _layer) && currenLink.Combos.Count > 0)
+                    if (_brain.IsBeginningLink(_currentAttk, _layer) && _currenLink.Combos.Count > 0)
                     {
                         //play next
-                        currentAttk.Reset();
-                        currentAttk = currenLink.Combos.Dequeue();
-                        brain.NextAnimation(currentAttk, _layer);
-                        Dispatcher.OnAttackTriggered(currentAttk);
+                        _currentAttk.Reset();
+                        _currentAttk = _currenLink.Combos.Dequeue();
+                        _brain.NextAnimation(_currentAttk, _layer);
+                        Dispatcher.OnAttackTriggered(_currentAttk);
                     }
 
                     //be ready to trigger evenets
-                    brain.ScanTimeline(currentAttk, _layer);
+                    _brain.ScanTimeline(_currentAttk, _layer);
 
                     //finished playing the whole chain
-                    if (currenLink.Combos.Count <= 0 && brain.IsEndingLink(currentAttk, _layer))
+                    if (_currenLink.Combos.Count <= 0 && _brain.IsEndingLink(_currentAttk, _layer))
                     {
                         ResetAll();
                         Dispatcher.OnComboCompleted(this);
@@ -129,15 +145,15 @@ namespace Generics.Utilities
 
                     break;
                 case KeySequencer.SequenceState.Completed:
-                    currenLink = chainQueue.Peek();
+                    _currenLink = _chainQueue.Peek();
 
                     //start the execution
-                    brain.RegisterCurrentCombo(this);
+                    _brain.RegisterCurrentCombo(this);
                     _ignoreInput = true;
-                    currentAttk = currenLink.Combos.Dequeue();
-                    brain.NextAnimation(currentAttk, _layer);
+                    _currentAttk = _currenLink.Combos.Dequeue();
+                    _brain.NextAnimation(_currentAttk, _layer);
 
-                    Dispatcher.OnAttackTriggered(currentAttk);
+                    Dispatcher.OnAttackTriggered(_currentAttk);
                     break;
             }
         }
@@ -147,7 +163,7 @@ namespace Generics.Utilities
         /// </summary>
         private void TimedPartialSequencer()
         {
-            KeySequencer.SequenceState inputState = inputSequencer.Listen(_ignoreInput);
+            KeySequencer.SequenceState inputState = InputSequencer.Listen(_ignoreInput);
             switch (inputState)
             {
                 case KeySequencer.SequenceState.Success:
@@ -157,7 +173,7 @@ namespace Generics.Utilities
                     ResetAll();
                     break;
                 case KeySequencer.SequenceState.Neutrial:
-                    if (currenLink == null) break;
+                    if (_currenLink == null) break;
 
                     /* Duties:
                      * scan the playing animation's timeline for trigger points
@@ -167,27 +183,27 @@ namespace Generics.Utilities
                      */
 
                     //scan for trigger points
-                    brain.ScanTimeline(currentAttk, _layer);
+                    _brain.ScanTimeline(_currentAttk, _layer);
 
                     //determain timing
-                    _ignoreInput = !brain.WithinLink(currentAttk, _layer);
+                    _ignoreInput = !_brain.WithinLink(_currentAttk, _layer);
 
                     //check for a long combo link and execute it
-                    if (currenLink.Combos.Count > 0 && brain.IsEndingLink(currentAttk, _layer))
+                    if (_currenLink.Combos.Count > 0 && _brain.IsEndingLink(_currentAttk, _layer))
                     {
                         _ignoreInput = true;
-                        currentAttk.Reset();
-                        currentAttk = currenLink.Combos.Dequeue();
-                        brain.NextAnimation(currentAttk, _layer);
+                        _currentAttk.Reset();
+                        _currentAttk = _currenLink.Combos.Dequeue();
+                        _brain.NextAnimation(_currentAttk, _layer);
 
-                        Dispatcher.OnAttackTriggered(currentAttk);
+                        Dispatcher.OnAttackTriggered(_currentAttk);
                     }
 
                     //reset if no input and the animation has finished playing
-                    currenLink.HasFinished = currenLink.Combos.Count == 0 && brain.IsExisting(currentAttk, _layer);
-                    if (currenLink.HasFinished)
+                    _currenLink.HasFinished = _currenLink.Combos.Count == 0 && _brain.IsExisting(_currentAttk, _layer);
+                    if (_currenLink.HasFinished)
                     {
-                        if (currenLink.Combos.Count == 0 && chainQueue.Count == 0)
+                        if (_currenLink.Combos.Count == 0 && _chainQueue.Count == 0)
                         {
                             Dispatcher.OnComboCompleted(this);
                         }
@@ -207,50 +223,50 @@ namespace Generics.Utilities
         /// </summary>
         private void AppendSequencer()
         {
-            KeySequencer.SequenceState inputState = inputSequencer.BufferedListening();
+            KeySequencer.SequenceState inputState = InputSequencer.BufferedListening();
 
             //put all Actions corresponding to the SequenceState in the Buffer and execute them when the Key Sequencer is in a neutral state
             switch (inputState)
             {
                 case KeySequencer.SequenceState.Success:
-                    actions.Enqueue(Link);
+                    _actions.Enqueue(Link);
                     break;
                 case KeySequencer.SequenceState.Completed:
-                    actions.Enqueue(Link);
-                    actions.Enqueue(delegate { Dispatcher.OnComboCompleted(this); });
+                    _actions.Enqueue(Link);
+                    _actions.Enqueue(delegate { Dispatcher.OnComboCompleted(this); });
                     break;
                 case KeySequencer.SequenceState.Interupted:
-                    actions.Enqueue(ResetAll);
+                    _actions.Enqueue(ResetAll);
                     break;
                 case KeySequencer.SequenceState.Neutrial:
 
-                    if (currenLink == null && actions.Count > 0) //start
+                    if (_currenLink == null && _actions.Count > 0) //start
                     {
-                        actions.Dequeue().Invoke();
+                        _actions.Dequeue().Invoke();
                     }
 
-                    if (currenLink != null)
+                    if (_currenLink != null)
                     {
-                        currenLink.HasFinished = brain.IsExisting(currentAttk, _layer);
-                        if (currenLink.HasFinished)
+                        _currenLink.HasFinished = _brain.IsExisting(_currentAttk, _layer);
+                        if (_currenLink.HasFinished)
                         {
                             //no key strokes and the anim has finished playing. reset !
                             ResetAll();
                             break;
                         }
 
-                        if (brain.IsEndingLink(currentAttk, _layer))
+                        if (_brain.IsEndingLink(_currentAttk, _layer))
                         {
-                            if (actions.Count > 0) //transition
+                            if (_actions.Count > 0) //transition
                             {
-                                actions.Dequeue().Invoke();
+                                _actions.Dequeue().Invoke();
                             }
-                            else if (currenLink.Combos.Count > 0) //finish off
+                            else if (_currenLink.Combos.Count > 0) //finish off
                             {
-                                currentAttk = currenLink.Combos.Dequeue();
-                                brain.NextAnimation(currentAttk, _layer);
+                                _currentAttk = _currenLink.Combos.Dequeue();
+                                _brain.NextAnimation(_currentAttk, _layer);
 
-                                Dispatcher.OnAttackTriggered(currentAttk);
+                                Dispatcher.OnAttackTriggered(_currentAttk);
                             }
                         }
                     }
@@ -260,21 +276,44 @@ namespace Generics.Utilities
         }
 
         /// <summary>
+        /// Buffered Seuquencer
+        /// </summary>
+        private void ScheduledSequencer()
+        {
+            KeySequencer.SequenceState inputState = InputSequencer.BufferedListening();
+            switch (inputState)
+            {
+                case KeySequencer.SequenceState.Success:
+                    Debug.Log("Succ");
+                    break;
+                case KeySequencer.SequenceState.Interupted:
+                    Debug.Log("Interr");
+                    break;
+                case KeySequencer.SequenceState.Neutrial:
+                    Debug.Log("Neut");
+                    break;
+                case KeySequencer.SequenceState.Completed:
+                    Debug.Log("Comp");
+                    break;
+            }
+        }
+
+        /// <summary>
         /// Link a new Chain Link combo to the sequencer
         /// </summary>
         private void Link()
         {
-            if (chainQueue.Count <= 0) return;
-            brain.RegisterCurrentCombo(this);
+            if (_chainQueue.Count <= 0) return;
+            _brain.RegisterCurrentCombo(this);
 
-            currenLink = chainQueue.Dequeue();
-            if (currentAttk) currentAttk.Reset(); //reset the last combo first
-            currentAttk = currenLink.Combos.Dequeue();
-            brain.NextAnimation(currentAttk, _layer);
+            _currenLink = _chainQueue.Dequeue();
+            if (_currentAttk) _currentAttk.Reset(); //reset the last combo first
+            _currentAttk = _currenLink.Combos.Dequeue();
+            _brain.NextAnimation(_currentAttk, _layer);
 
-            currenLink.HasFinished = false;
+            _currenLink.HasFinished = false;
 
-            Dispatcher.OnAttackTriggered(currentAttk);
+            Dispatcher.OnAttackTriggered(_currentAttk);
         }
 
         /// <summary>
@@ -282,7 +321,7 @@ namespace Generics.Utilities
         /// </summary>
         public void ResetAll()
         {
-            switch (inputSequencer.type)
+            switch (InputSequencer.Type)
             {
                 case SequenceType.Full:
                     ResetFullSequence();
@@ -301,23 +340,23 @@ namespace Generics.Utilities
         /// </summary>
         private void ResetPartialSequence()
         {
-            currenLink = null;
-            currentAttk = null;
+            _currenLink = null;
+            _currentAttk = null;
             _ignoreInput = false;
 
-            brain.UnRegisterCurrentCombo(this);
-            if (chainQueue.Count != mainChain.Length)
+            _brain.UnRegisterCurrentCombo(this);
+            if (_chainQueue.Count != _mainChain.Length)
             {
                 //Enumerable.All(mainChain, x => x.Reset());
-                for (int i = 0; i < mainChain.Length; i++)
+                for (int i = 0; i < _mainChain.Length; i++)
                 {
-                    mainChain[i].Reset();
+                    _mainChain[i].Reset();
                 }
 
-                chainQueue = new Queue<ChainLink>(mainChain);
+                _chainQueue = new Queue<ChainLink>(_mainChain);
             }
 
-            inputSequencer.Reset();
+            InputSequencer.Reset();
         }
 
         /// <summary>
@@ -325,10 +364,10 @@ namespace Generics.Utilities
         /// </summary>
         private void ResetFullSequence()
         {
-            brain.UnRegisterCurrentCombo(this);
+            _brain.UnRegisterCurrentCombo(this);
 
-            chainQueue.Peek().Reset();
-            currentAttk = null;
+            _chainQueue.Peek().Reset();
+            _currentAttk = null;
             _ignoreInput = false;
         }
     }

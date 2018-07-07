@@ -11,12 +11,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ae57ae7d73213649a4c8f938dfb792f, type: 3}
   m_Name: UnarmedCombo1
   m_EditorClassIdentifier: 
-  layerName: Fullbody
-  animations:
-  - {fileID: 11400000, guid: cd1b0595b54c43d40b5c24ba8cc76fa5, type: 2}
-  - {fileID: 11400000, guid: c01e690383b8a3048b9f4284545aa5c0, type: 2}
-  inputSequencer:
-    type: 0
-    enableTimeLimit: 1
-    timeLimit: 2
-    sequence: 4301000043010000
+  LayerName: Fullbody
+  Animations: []
+  InputSequencer:
+    Type: 0
+    EnableTimeLimit: 1
+    TimeLimit: 2
+    Sequence: 

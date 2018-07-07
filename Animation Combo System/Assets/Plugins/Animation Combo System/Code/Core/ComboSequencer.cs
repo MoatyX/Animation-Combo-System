@@ -23,8 +23,8 @@ namespace Generics.Utilities
         /// </summary>
         public bool Initialise()
         {
-            Combos.All(x => x.Initialise(this));
-            _initiated = true;
+            var all = Combos.All(x => x.Initialise(this));
+            _initiated = all;
             return _initiated;
         }
 
@@ -36,7 +36,7 @@ namespace Generics.Utilities
             if (!_initiated)
             {
                 Debug.LogError(
-                    "Make sure all necessary references are set, and to call the Setup() function at the beginning to initiate the combo");
+                    "The Sequencer was not initialised probably, either duo to NullReferances/invalid-input in the inspector or not Calling the Initialise() function");
                 return;
             }
 

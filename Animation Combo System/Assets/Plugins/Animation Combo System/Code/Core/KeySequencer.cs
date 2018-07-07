@@ -17,27 +17,26 @@ namespace Generics.Utilities
             Completed
         }
 
-        public SequenceType type;
-        public bool enableTimeLimit;
-        public float timeLimit;
-        public KeyCode[] sequence;
+        public SequenceType Type;
+        public bool EnableTimeLimit = true;
+        public float TimeLimit = 2f;
+        public KeyCode[] Sequence;
 
-        private readonly Queue<KeyCode> queue = new Queue<KeyCode>();
-        private float timer;
+        private readonly Queue<KeyCode> _queue = new Queue<KeyCode>();
+        private float _timer;
 
 
         /// <summary>
         /// Initialisation
         /// </summary>
-        /// <param name="type"></param>
         public void Setup()
         {
-            foreach (KeyCode k in sequence)
+            foreach (KeyCode k in Sequence)
             {
-                queue.Enqueue(k);
+                _queue.Enqueue(k);
             }
 
-            timer = Time.time;
+            _timer = Time.time;
         }
 
         /// <summary>
@@ -52,21 +51,21 @@ namespace Generics.Utilities
                 return SequenceState.Neutrial;
             }
 
-            if (timeLimit < Time.time - timer && enableTimeLimit)
+            if (TimeLimit < Time.time - _timer && EnableTimeLimit)
             {
                 //we ran out of time
                 Reset();
                 return SequenceState.Interupted;
             }
 
-            if (Input.GetKeyDown(queue.Peek()))
+            if (Input.GetKeyDown(_queue.Peek()))
             {
-                queue.Dequeue();
-                timer = Time.time;
+                _queue.Dequeue();
+                _timer = Time.time;
 
-                if (type == SequenceType.Partial)
+                if (Type == SequenceType.Partial)
                 {
-                    if (queue.Count > 0) return SequenceState.Success;
+                    if (_queue.Count > 0) return SequenceState.Success;
 
                     Reset();
                     return SequenceState.Completed;
@@ -79,7 +78,7 @@ namespace Generics.Utilities
                 return SequenceState.Interupted;
             }
 
-            if (queue.Count > 0) return SequenceState.Neutrial;
+            if (_queue.Count > 0) return SequenceState.Neutrial;
 
             Reset();
             return SequenceState.Completed;
@@ -90,17 +89,17 @@ namespace Generics.Utilities
         /// </summary>
         public SequenceState BufferedListening()
         {
-            if (queue.Count == 0) return SequenceState.Neutrial;
+            if (_queue.Count == 0) return SequenceState.Neutrial;
 
-            if (Input.GetKeyDown(queue.Peek()))
+            if (Input.GetKeyDown(_queue.Peek()))
             {
-                queue.Dequeue();
-                return queue.Count > 0 ? SequenceState.Success : SequenceState.Completed;
+                _queue.Dequeue();
+                return _queue.Count > 0 ? SequenceState.Success : SequenceState.Completed;
             }
 
             if (!Input.anyKeyDown) return SequenceState.Neutrial;
 
-            queue.Dequeue();
+            _queue.Dequeue();
             return SequenceState.Interupted;
         }
 
@@ -110,16 +109,16 @@ namespace Generics.Utilities
         public void Reset()
         {
             //save us some performance if the queue didnt move
-            if (queue.Count != sequence.Length)
+            if (_queue.Count != Sequence.Length)
             {
-                queue.Clear();
-                for (int i = 0; i < sequence.Length; i++)
+                _queue.Clear();
+                for (int i = 0; i < Sequence.Length; i++)
                 {
-                    queue.Enqueue(sequence[i]);
+                    _queue.Enqueue(Sequence[i]);
                 }
             }
 
-            timer = Time.time;
+            _timer = Time.time;
         }
 
         /// <summary>
@@ -127,9 +126,9 @@ namespace Generics.Utilities
         /// </summary>
         public void Undo()
         {
-            if (sequence.Length == queue.Count) return;
+            if (Sequence.Length == _queue.Count) return;
 
-            queue.Enqueue(sequence[sequence.Length - 1 - queue.Count]);
+            _queue.Enqueue(Sequence[Sequence.Length - 1 - _queue.Count]);
         }
     }
 }
