@@ -14,6 +14,7 @@ namespace Generics.Utilities
         protected virtual void Update()
         {
             Sequencer.Update();
+
         }
     }
 }

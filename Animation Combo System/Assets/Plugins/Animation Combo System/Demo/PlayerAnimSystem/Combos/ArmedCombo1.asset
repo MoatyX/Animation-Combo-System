@@ -13,11 +13,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   layerName: Fullbody
   animations:
-  - {fileID: 11400000, guid: 176a61243c53950429042d78d62be49b, type: 2}
-  - {fileID: 11400000, guid: 1a8f1c4cdad2e494cb805d0a3bffa557, type: 2}
-  - {fileID: 11400000, guid: 801efb4115e1ed84fb9f0750aa643328, type: 2}
+  - {fileID: 11400000, guid: 908ee407a4723b94492cfc11a273544b, type: 2}
+  - {fileID: 11400000, guid: 885ac9d4bf9dafb4982b70b6d55c820e, type: 2}
+  - {fileID: 11400000, guid: b9ed8324a4a0450448180df6611828aa, type: 2}
   inputSequencer:
-    type: 0
-    enableTimeLimit: 1
+    type: 1
+    enableTimeLimit: 0
     timeLimit: 2
-    sequence: 430100004301000044010000
+    sequence: 430100004301000043010000

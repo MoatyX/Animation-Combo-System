@@ -749,7 +749,7 @@ Prefab:
     - target: {fileID: 114956153697661294, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
       propertyPath: HitScanningLogs
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114956153697661294, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
@@ -771,6 +771,17 @@ Prefab:
       propertyPath: UnarmedSequencer.Animator
       value: 
       objectReference: {fileID: 1944090227}
+    - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
+        type: 2}
+      propertyPath: ArmedSequencer.Combos.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 75cfda8e70a40fc48bd91b71e3231d05,
+        type: 2}
+    - target: {fileID: 114956153697661294, guid: 22d0be97c6fa0a14692aa8995116150f,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 22d0be97c6fa0a14692aa8995116150f, type: 2}
   m_IsPrefabParent: 0

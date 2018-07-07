@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Generics.Utilities
 {
     /// <summary>
     /// Defines 1 single animation in the 1 single Link of the chain
     /// </summary>
-    [System.Serializable]
+    [Serializable]
     [CreateAssetMenu(fileName = "New Attack", menuName = "Animation Combo System/New Attack")]
     public class AttackAnim : ScriptableObject
     {
@@ -14,19 +15,43 @@ namespace Generics.Utilities
         /// <summary>
         /// Simple struct that contains data about the damage
         /// </summary>
-        [System.Serializable]
+        [Serializable]
         public struct DamageData
         {
             [Range(0f, 1f), Tooltip("a point where a hit-scan event will be triggered")]
             public float TriggerTime;
 
             public float Damage;
+
+            internal bool Triggered { get; private set; }
+
+            /// <summary>
+            /// Trigger a damage data
+            /// </summary>
+            /// <param name="attack"></param>
+            /// <param name="index"></param>
+            /// <param name="callback"></param>
+            internal void Trigger(AttackAnim attack, uint index, Action callback)
+            {
+                if (Triggered) return;
+
+                Dispatcher.OnHitScanning(attack, index, Damage);
+                Triggered = true;
+
+                if(callback != null)
+                callback.Invoke();
+            }
+
+            internal void Reset()
+            {
+                Triggered = false;
+            }
         }
 
         /// <summary>
         /// A simple struct that contains data about a generic event
         /// </summary>
-        [System.Serializable]
+        [Serializable]
         public struct GenericEvent
         {
             [Tooltip("A descriptive name to the event (has no influence in the system)")]
@@ -37,45 +62,70 @@ namespace Generics.Utilities
 
             [Tooltip("An argument that will passed to the listening function")]
             public string Key;
+
+            internal bool Triggered { get; private set; }
+
+            /// <summary>
+            /// Trigger a generic event
+            /// </summary>
+            /// <param name="attack"></param>
+            /// <param name="index"></param>
+            /// <param name="callback"></param>
+            internal void Trigger(AttackAnim attack, uint index, Action callback)
+            {
+                if (Triggered) return;
+
+                Dispatcher.OnGenericEvent(attack, index, Key);
+                Triggered = true;
+
+                if(callback != null)
+                callback.Invoke();
+            }
+
+            internal void Reset()
+            {
+                Triggered = false;
+            }
         }
 
         public string AnimName;
 
-        [Header("Linking")]
-        [Range(0f, 1f)] public float LinkBegin = 0.2f;
+        [Header("Linking")] [Range(0f, 1f)] public float LinkBegin = 0.2f;
         [Range(0f, 1f)] public float LinkEnd = 1f;
         public float TransitionDuration = 0.1f;
 
-        [Header("Events")]
-        public DamageData[] DamageEvents;
+        [Header("Events")] public DamageData[] DamageEvents;
         public GenericEvent[] GenericEvents;
 
 
         protected internal int AnimHash { get; private set; }
-        //protected internal bool HasFinishedPlaying { get; set; }
-        protected internal bool HasStarted { get; set; }
+        protected internal bool HasStarted { get; private set; }
 
         private uint _genericEventIndex;
         private uint _hitScanIndex;
+
+        private Action _genericEventCallback;
+        private Action _damageEventCallback;
 
         private void OnEnable()
         {
             AnimHash = Animator.StringToHash(AnimName);
             TransitionDuration = Mathf.Abs(TransitionDuration);
-            //HasFinishedPlaying = false;
             Reset();
 
-            if (Application.isPlaying)
-            {
-                Dispatcher.AttackTriggered += OnAttackTriggered;
-            }
+
+            Dispatcher.AttackTriggered += OnAttackTriggered;
+
+            _genericEventCallback = () => _genericEventIndex++;
+            _damageEventCallback = () => _hitScanIndex++;
         }
 
         private void OnDisable()
         {
-            if (!Application.isPlaying) return;
-
             Dispatcher.AttackTriggered -= OnAttackTriggered;
+            _genericEventCallback = null;
+            _damageEventCallback = null;
+
             Reset();
         }
 
@@ -86,12 +136,14 @@ namespace Generics.Utilities
         protected internal void TriggerEvents(float currentNormalisedTime)
         {
             for (var i = 0; i < DamageEvents.Length; i++)
-                if (Utilities.InRange(currentNormalisedTime, DamageEvents[i].TriggerTime, DamageEvents[i].TriggerTime + Time.deltaTime))
-                TriggerHitScans(i);
+                if (Utilities.InRange(currentNormalisedTime, DamageEvents[i].TriggerTime,
+                    DamageEvents[i].TriggerTime + Time.deltaTime))
+                    TriggerHitScans(i);
 
             for (var i = 0; i < GenericEvents.Length; i++)
-                if (Utilities.InRange(currentNormalisedTime, GenericEvents[i].TriggerTime, GenericEvents[i].TriggerTime + Time.deltaTime))
-                TriggerGenericEvents(i);
+                if (Utilities.InRange(currentNormalisedTime, GenericEvents[i].TriggerTime - Time.deltaTime,
+                    GenericEvents[i].TriggerTime))
+                    TriggerGenericEvents(i);
         }
 
         /// <summary>
@@ -99,8 +151,7 @@ namespace Generics.Utilities
         /// </summary>
         private void TriggerHitScans(int i)
         {
-            Dispatcher.OnHitScanning(this, _hitScanIndex, DamageEvents[i].Damage);
-            _hitScanIndex++;
+            DamageEvents[i].Trigger(this, _hitScanIndex, _damageEventCallback);
         }
 
         /// <summary>
@@ -108,8 +159,7 @@ namespace Generics.Utilities
         /// </summary>
         private void TriggerGenericEvents(int i)
         {
-            Dispatcher.OnGenericEvent(this, _genericEventIndex, GenericEvents[i].Key);
-            _genericEventIndex++;
+            GenericEvents[i].Trigger(this, _genericEventIndex, _genericEventCallback);
         }
 
         /// <summary>
@@ -118,7 +168,7 @@ namespace Generics.Utilities
         /// <param name="attack"></param>
         private void OnAttackTriggered(AttackAnim attack)
         {
-            if(attack != this) return;
+            if (attack != this) return;
 
             HasStarted = true;
         }
@@ -129,10 +179,22 @@ namespace Generics.Utilities
         /// <returns></returns>
         protected internal bool Reset()
         {
-            //HasFinishedPlaying = false;
             HasStarted = false;
             _hitScanIndex = 0;
             _genericEventIndex = 0;
+
+            if (DamageEvents != null)
+                for (int i = 0; i < DamageEvents.Length; i++)
+                {
+                    DamageEvents[i].Reset();
+                }
+
+            if (GenericEvents != null)
+                for (int i = 0; i < GenericEvents.Length; i++)
+                {
+                    GenericEvents[i].Reset();
+                }
+
             return true;
         }
     }

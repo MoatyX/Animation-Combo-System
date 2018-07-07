@@ -1,5 +1,4 @@
-﻿using System;
-using Generics.Utilities;
+﻿using Generics.Utilities;
 using UnityEngine;
 
 /// <summary>
@@ -23,26 +22,24 @@ public class SampleEventsListener : MonoBehaviour
         Dispatcher.GenericEvent += OnGenericEvent;
     }
 
-    private void OnGenericEvent(AttackAnim attack, uint index, string key)
-    {
-        switch (key)
-        {
-            case "FireWorks":
-                Debug.Log("Triggered the fire works event");
-                break;
-            case "Particles":
-                Debug.Log("Triggered the particles event");
-                break;
-            default:
-                break;
-        }
-    }
-
     private void OnDisable()
     {
         Dispatcher.HitScanning -= OnHitScanning;
         Dispatcher.ComboCompleted -= OnComboCompleted;
         Dispatcher.AttackTriggered -= OnAttackTriggered;
+        Dispatcher.GenericEvent -= OnGenericEvent;
+    }
+
+    private void OnGenericEvent(AttackAnim attack, uint index, string key)
+    {
+        switch (key)
+        {
+            case "FX":
+                Debug.Log("Triggering Particle effects !!");
+                break;
+            default:
+                break;
+        }
     }
 
     /// <summary>

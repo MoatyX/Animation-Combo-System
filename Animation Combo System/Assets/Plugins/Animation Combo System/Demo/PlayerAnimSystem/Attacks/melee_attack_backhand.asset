@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Name: melee_attack_backhand
   m_EditorClassIdentifier: 
   AnimName: melee_attack_backhand
-  LinkBegin: 0.2
-  LinkEnd: 0.75
+  LinkBegin: 0.9
+  LinkEnd: 1
   TransitionDuration: 0.1
-  ScanPoints: []
-  Damage: 0
+  DamageEvents: []
+  GenericEvents: []

@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Name: melee_attack_360_high
   m_EditorClassIdentifier: 
   AnimName: melee_attack_360_high
-  LinkBegin: 0.605
+  LinkBegin: 0.64
   LinkEnd: 1
   TransitionDuration: 0.1
-  DamageEvents: []
-  GenericEvents: []
+  DamageEvents:
+  - TriggerTime: 0.4
+    Damage: 0
+  GenericEvents:
+  - Name: Iron Particle Effetcs
+    TriggerTime: 0.32
+    Key: FX
