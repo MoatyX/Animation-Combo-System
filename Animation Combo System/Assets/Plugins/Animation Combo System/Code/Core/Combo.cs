@@ -270,16 +270,19 @@ namespace Generics.Utilities
                             }
                         }
 
-                        _currenLink.HasFinished = _brain.IsExisting(_currentAttk, _layer);
-                        if (_currenLink.HasFinished)
+                        if (_currenLink != null)
                         {
-                            if (_currenLink.Combos.Count == 0 && _chainQueue.Count == 0)
+                            _currenLink.HasFinished = _brain.IsExisting(_currentAttk, _layer);
+                            if (_currenLink.HasFinished)
                             {
-                                Dispatcher.OnComboCompleted(this);
-                            }
+                                if (_currenLink.Combos.Count == 0 && _chainQueue.Count == 0)
+                                {
+                                    Dispatcher.OnComboCompleted(this);
+                                }
 
-                            //no key strokes and the anim has finished playing. reset !
-                            ResetAll();
+                                //no key strokes and the anim has finished playing. reset !
+                                ResetAll();
+                            }
                         }
                     }
 
@@ -332,7 +335,6 @@ namespace Generics.Utilities
         /// </summary>
         private void ResetPartialSequence()
         {
-            Debug.Log("Reseted");
             _currenLink = null;
             _currentAttk = null;
             _ignoreInput = false;

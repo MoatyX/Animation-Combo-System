@@ -736,36 +736,10 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
-      propertyPath: UnarmedSequencer.Combos.Array.data[0]
+      propertyPath: ArmedSequencer.Combos.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: d60cb0eeddebb1a40841f333bec2ac9d,
+      objectReference: {fileID: 11400000, guid: 257fe6b2ab1775d4faec1764f7cbc754,
         type: 2}
-    - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
-        type: 2}
-      propertyPath: ArmedSequencer.Combos.Array.data[1]
-      value: 
-      objectReference: {fileID: 11400000, guid: 875b887b60503884da5aedb4f281e7d5,
-        type: 2}
-    - target: {fileID: 114956153697661294, guid: 22d0be97c6fa0a14692aa8995116150f,
-        type: 2}
-      propertyPath: HitScanningLogs
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114956153697661294, guid: 22d0be97c6fa0a14692aa8995116150f,
-        type: 2}
-      propertyPath: ComboCompeleteLogs
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114956153697661294, guid: 22d0be97c6fa0a14692aa8995116150f,
-        type: 2}
-      propertyPath: AttackTriggeredLogs
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
-        type: 2}
-      propertyPath: ArmedSequencer.Animator
-      value: 
-      objectReference: {fileID: 1944090227}
     - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
       propertyPath: UnarmedSequencer.Animator
@@ -773,15 +747,10 @@ Prefab:
       objectReference: {fileID: 1944090227}
     - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
-      propertyPath: ArmedSequencer.Combos.Array.data[0]
+      propertyPath: UnarmedSequencer.Combos.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: 75cfda8e70a40fc48bd91b71e3231d05,
+      objectReference: {fileID: 11400000, guid: d60cb0eeddebb1a40841f333bec2ac9d,
         type: 2}
-    - target: {fileID: 114956153697661294, guid: 22d0be97c6fa0a14692aa8995116150f,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 22d0be97c6fa0a14692aa8995116150f, type: 2}
   m_IsPrefabParent: 0

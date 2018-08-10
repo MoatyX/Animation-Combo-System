@@ -9,15 +9,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ae57ae7d73213649a4c8f938dfb792f, type: 3}
-  m_Name: ArmedCombo1
+  m_Name: UnarmedCombo1
   m_EditorClassIdentifier: 
   LayerName: Fullbody
   Animations:
-  - {fileID: 11400000, guid: 908ee407a4723b94492cfc11a273544b, type: 2}
-  - {fileID: 11400000, guid: 885ac9d4bf9dafb4982b70b6d55c820e, type: 2}
-  - {fileID: 11400000, guid: b9ed8324a4a0450448180df6611828aa, type: 2}
+  - {fileID: 11400000, guid: cd1b0595b54c43d40b5c24ba8cc76fa5, type: 2}
+  - {fileID: 11400000, guid: c01e690383b8a3048b9f4284545aa5c0, type: 2}
   InputSequencer:
-    Type: 2
+    Type: 1
     EnableTimeLimit: 1
     TimeLimit: 2
     Sequence: 4301000043010000

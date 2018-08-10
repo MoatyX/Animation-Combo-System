@@ -5,7 +5,7 @@ public class DemoComboSystem : MonoBehaviour
 {
     [Header("Sequencers")]
     public ComboSequencer ArmedSequencer;
-    //public ComboSequencer UnarmedSequencer;
+    public ComboSequencer UnarmedSequencer;
 
     [Header("Simple API Examples")]
     public bool IsExecutingCombo;
@@ -19,7 +19,7 @@ public class DemoComboSystem : MonoBehaviour
 
         //must be called once at the beginning to setup and initialise the sequencers
         ArmedSequencer.Initialise();
-        //UnarmedSequencer.Initialise();
+        UnarmedSequencer.Initialise();
     }
 
     private void Update()
@@ -35,9 +35,9 @@ public class DemoComboSystem : MonoBehaviour
         }
         else
         {
-            //UnarmedSequencer.Update();
-            //IsExecutingCombo = UnarmedSequencer.IsExecuting();
-            //ActiveCombo = UnarmedSequencer.ActiveCombo;
+            UnarmedSequencer.Update();
+            IsExecutingCombo = UnarmedSequencer.IsExecuting();
+            ActiveCombo = UnarmedSequencer.ActiveCombo;
         }
 
     }

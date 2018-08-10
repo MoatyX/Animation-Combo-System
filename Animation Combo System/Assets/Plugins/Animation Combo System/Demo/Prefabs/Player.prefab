@@ -2295,12 +2295,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ArmedSequencer:
-    Combos:
-    - {fileID: 11400000, guid: 75cfda8e70a40fc48bd91b71e3231d05, type: 2}
-    animator: {fileID: 95894263811249378}
-  UnarmedSequencer:
     Combos: []
-    animator: {fileID: 95894263811249378}
+    Animator: {fileID: 95894263811249378}
   IsExecutingCombo: 0
   ActiveCombo: {fileID: 0}
 --- !u!114 &114956153697661294
@@ -2309,12 +2305,12 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1143939130889992}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dd8a4dfaba65b0a49a4e0145a8dc73b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HitScanningLogs: 0
+  HitScanningLogs: 1
   ComboCompeleteLogs: 0
   AttackTriggeredLogs: 0
   ScanPoint: {fileID: 4718274923748472}
