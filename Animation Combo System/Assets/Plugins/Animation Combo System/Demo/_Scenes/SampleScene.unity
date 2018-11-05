@@ -738,7 +738,7 @@ Prefab:
         type: 2}
       propertyPath: ArmedSequencer.Combos.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: 257fe6b2ab1775d4faec1764f7cbc754,
+      objectReference: {fileID: 11400000, guid: 75cfda8e70a40fc48bd91b71e3231d05,
         type: 2}
     - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
@@ -825,7 +825,8 @@ Prefab:
       propertyPath: m_MoveSpeed
       value: 5
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 11400002, guid: 49a0e923d39ec3c4c8bb97699e2f2903, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 49a0e923d39ec3c4c8bb97699e2f2903, type: 2}
   m_IsPrefabParent: 0
 --- !u!95 &1944090227 stripped
