@@ -9,6 +9,10 @@ public class PlayerController : MonoBehaviour
     public float RotationSpeed = 5;
     public float moveSpeed = 1;
 
+    [Header("Simple Abilities")]
+    public bool FoucsMode = true;
+    public bool SwitchWeapons = true;
+
     [Header("Grounding")]
     public float RayLength = 0.5f;
     public LayerMask GroundMask;
@@ -57,7 +61,7 @@ public class PlayerController : MonoBehaviour
     {
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F) && FoucsMode)
         {
             focusMode = !focusMode;
         }
@@ -86,7 +90,7 @@ public class PlayerController : MonoBehaviour
         _anim.SetFloat("Right", inputV.x, 0.1f, Time.deltaTime);
         _anim.SetBool("Moving", inputV.sqrMagnitude >= 0.05f);
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && SwitchWeapons)
         {
             AxeEquiped = !AxeEquiped;
 

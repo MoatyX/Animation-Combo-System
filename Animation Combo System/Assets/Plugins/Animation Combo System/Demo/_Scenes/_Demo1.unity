@@ -199,6 +199,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1373455983}
+  - {fileID: 1429759535}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -673,7 +674,7 @@ GameObject:
   - component: {fileID: 1373455985}
   - component: {fileID: 1373455984}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Combo1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -736,6 +737,81 @@ CanvasRenderer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1373455982}
+  m_CullTransparentMesh: 0
+--- !u!1 &1429759534
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1429759535}
+  - component: {fileID: 1429759537}
+  - component: {fileID: 1429759536}
+  m_Layer: 5
+  m_Name: Combo2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1429759535
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1429759534}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 16105581}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 45, y: -60}
+  m_SizeDelta: {x: 248.82, y: 30}
+  m_Pivot: {x: 0, y: 1}
+--- !u!114 &1429759536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1429759534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 25
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 'Combo 2: Mouse0 x2, Mouse1'
+--- !u!222 &1429759537
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1429759534}
   m_CullTransparentMesh: 0
 --- !u!1001 &1442106156
 Prefab:
@@ -935,7 +1011,7 @@ Prefab:
     - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
       propertyPath: ArmedSequencer.Combos.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
         type: 2}
@@ -1005,6 +1081,36 @@ Prefab:
         type: 2}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 95894263811249378, guid: 22d0be97c6fa0a14692aa8995116150f,
+        type: 2}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: ba7f513a199d49745b8a2d939a3c399e, type: 3}
+    - target: {fileID: 95894263811249378, guid: 22d0be97c6fa0a14692aa8995116150f,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1143939130889992, guid: 22d0be97c6fa0a14692aa8995116150f, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114687389133334064, guid: 22d0be97c6fa0a14692aa8995116150f,
+        type: 2}
+      propertyPath: ArmedSequencer.Combos.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: a2613a084e8b8534ebe6d2b2fd15619b,
+        type: 2}
+    - target: {fileID: 114963612342983092, guid: 22d0be97c6fa0a14692aa8995116150f,
+        type: 2}
+      propertyPath: FoucsMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114963612342983092, guid: 22d0be97c6fa0a14692aa8995116150f,
+        type: 2}
+      propertyPath: SwitchWeapons
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22d0be97c6fa0a14692aa8995116150f, type: 2}
